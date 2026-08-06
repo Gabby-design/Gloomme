@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './index.css';
 
 // Product Catalog aligned with ₦30,000, ₦35,000, and ₦40,000 pricing structure
@@ -240,8 +240,18 @@ function KlasikLogo({ height = 48, className = '', fill = 'currentColor' }) {
 }
 
 function App() {
+  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
   const [selectedPrice, setSelectedPrice] = useState('ALL');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
   const [searchQuery, setSearchQuery] = useState('');
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -382,7 +392,7 @@ function App() {
       <header className="site-header">
         <div className="nav-inner">
           <a href="#home" className="brand-logo" aria-label="Klasik Wardrobe Home">
-            <KlasikLogo height={44} className="header-logo" fill="#0f172a" />
+            <KlasikLogo height={44} className="header-logo" fill={theme === 'dark' ? '#ffffff' : '#0f172a'} />
           </a>
 
           {/* Search Box */}
@@ -399,6 +409,9 @@ function App() {
 
           {/* Nav Actions */}
           <div className="nav-actions">
+            <button className="theme-toggle-btn" onClick={toggleTheme} aria-label="Toggle Light/Dark Theme">
+              {theme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode'}
+            </button>
             <button className="filter-btn" onClick={() => setIsSizeGuideOpen(true)}>
               Size Guide
             </button>
