@@ -409,8 +409,18 @@ function App() {
 
           {/* Nav Actions */}
           <div className="nav-actions">
-            <button className="theme-toggle-btn" onClick={toggleTheme} aria-label="Toggle Light/Dark Theme">
-              {theme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode'}
+            <button
+              className={`theme-toggle-switch ${theme}`}
+              onClick={toggleTheme}
+              aria-label="Toggle Light and Dark Theme"
+              title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
+            >
+              <span className="toggle-track">
+                <span className="toggle-icon sun">☀️</span>
+                <span className="toggle-icon moon">🌙</span>
+                <span className="toggle-thumb" />
+              </span>
+              <span className="toggle-label">{theme === 'light' ? 'Light' : 'Dark'}</span>
             </button>
             <button className="filter-btn" onClick={() => setIsSizeGuideOpen(true)}>
               Size Guide
