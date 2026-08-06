@@ -20,8 +20,13 @@ const PRODUCTS = [
       { name: 'Obsidian Black', hex: '#0a0a0c' },
       { name: 'Charcoal Grey', hex: '#27272a' },
     ],
-    image: '/images/black_tee.jpg',
+    image: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800&auto=format&fit=crop',
     fallbackImage: 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800&auto=format&fit=crop',
+    gallery: [
+      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800&auto=format&fit=crop',
+    ],
   },
   {
     id: 'kwt-02',
@@ -40,8 +45,13 @@ const PRODUCTS = [
       { name: 'Vintage Slate', hex: '#3f3f46' },
       { name: 'Faded Ash', hex: '#71717a' },
     ],
-    image: '/images/acid_wash.jpg',
+    image: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800&auto=format&fit=crop',
     fallbackImage: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800&auto=format&fit=crop',
+    gallery: [
+      'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800&auto=format&fit=crop',
+    ],
   },
   {
     id: 'kwt-03',
@@ -61,8 +71,13 @@ const PRODUCTS = [
       { name: 'Imperial Gold', hex: '#d4af37' },
       { name: 'Midnight Noir', hex: '#18181b' },
     ],
-    image: '/images/silk_tee.jpg',
+    image: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=800&auto=format&fit=crop',
     fallbackImage: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=800&auto=format&fit=crop',
+    gallery: [
+      'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800&auto=format&fit=crop',
+    ],
   },
   {
     id: 'kwt-04',
@@ -83,6 +98,11 @@ const PRODUCTS = [
     ],
     image: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800&auto=format&fit=crop',
     fallbackImage: 'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800&auto=format&fit=crop',
+    gallery: [
+      'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1562157873-818bc0726f68?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800&auto=format&fit=crop',
+    ],
   },
   {
     id: 'kwt-05',
@@ -103,6 +123,11 @@ const PRODUCTS = [
     ],
     image: 'https://images.unsplash.com/photo-1562157873-818bc0726f68?q=80&w=800&auto=format&fit=crop',
     fallbackImage: 'https://images.unsplash.com/photo-1562157873-818bc0726f68?q=80&w=800&auto=format&fit=crop',
+    gallery: [
+      'https://images.unsplash.com/photo-1562157873-818bc0726f68?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800&auto=format&fit=crop',
+    ],
   },
   {
     id: 'kwt-06',
@@ -123,6 +148,11 @@ const PRODUCTS = [
     ],
     image: 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800&auto=format&fit=crop',
     fallbackImage: 'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800&auto=format&fit=crop',
+    gallery: [
+      'https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=800&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800&auto=format&fit=crop',
+    ],
   },
 ];
 
@@ -147,6 +177,68 @@ const REVIEWS = [
   },
 ];
 
+// Klasik Wardrobe Iconic Streetwear Logo Component
+function KlasikLogo({ height = 48, className = '', fill = 'currentColor' }) {
+  return (
+    <svg
+      className={`klasik-brand-logo ${className}`}
+      height={height}
+      viewBox="0 0 420 180"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ display: 'block', overflow: 'visible' }}
+    >
+      <g transform="translate(210, 90) rotate(-9) translate(-210, -90)">
+        {/* Top-Left Bracket & Speed Marks */}
+        <path d="M 42 28 L 42 62 M 42 28 L 78 28" stroke={fill} strokeWidth="4" strokeLinecap="square" />
+        <path d="M 54 18 L 98 18" stroke={fill} strokeWidth="2.5" strokeLinecap="round" />
+        
+        {/* Top-Right Speed Marks */}
+        <path d="M 235 22 L 310 18" stroke={fill} strokeWidth="3" strokeLinecap="round" />
+        <path d="M 255 12 L 335 8" stroke={fill} strokeWidth="2.5" strokeLinecap="round" />
+        
+        {/* KLASIK Text */}
+        <text
+          x="205"
+          y="76"
+          textAnchor="middle"
+          fontFamily="'Impact', 'Arial Black', 'Montserrat', 'Trebuchet MS', sans-serif"
+          fontWeight="900"
+          fontSize="70"
+          fill={fill}
+          letterSpacing="3"
+        >
+          KLASIK
+        </text>
+        
+        {/* WARDROBE Text */}
+        <text
+          x="205"
+          y="136"
+          textAnchor="middle"
+          fontFamily="'Impact', 'Arial Black', 'Montserrat', 'Trebuchet MS', sans-serif"
+          fontWeight="900"
+          fontSize="52"
+          fill={fill}
+          letterSpacing="1.5"
+        >
+          WARDROBE
+        </text>
+        
+        {/* Bottom-Left Speed Marks */}
+        <path d="M 68 152 L 132 152" stroke={fill} strokeWidth="3" strokeLinecap="round" />
+        <path d="M 78 162 L 122 162" stroke={fill} strokeWidth="2.5" strokeLinecap="round" />
+        
+        {/* Bottom-Right Bracket & Speed Marks */}
+        <path d="M 185 142 L 358 142 L 358 115" stroke={fill} strokeWidth="3.5" strokeLinecap="square" strokeLinejoin="miter" />
+        <path d="M 370 128 L 370 156 M 345 156 L 370 156" stroke={fill} strokeWidth="4" strokeLinecap="square" />
+        <path d="M 325 168 L 378 168" stroke={fill} strokeWidth="2.5" strokeLinecap="round" />
+        <path d="M 338 176 L 370 176" stroke={fill} strokeWidth="2" strokeLinecap="round" />
+      </g>
+    </svg>
+  );
+}
+
 function App() {
   const [selectedPrice, setSelectedPrice] = useState('ALL');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
@@ -160,6 +252,9 @@ function App() {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState('FORM');
   const [toasts, setToasts] = useState([]);
+  const [selectedCardSizes, setSelectedCardSizes] = useState({});
+  const [cardActiveImages, setCardActiveImages] = useState({});
+  const [quickViewActiveImg, setQuickViewActiveImg] = useState(null);
   const [customerForm, setCustomerForm] = useState({
     name: '',
     email: '',
@@ -168,6 +263,18 @@ function App() {
     city: 'Lagos',
     paymentMethod: 'PAY_ON_DELIVERY',
   });
+
+  const getSelectedSize = (productId) => selectedCardSizes[productId] || 'L';
+
+  const handleSelectCardSize = (productId, size) => {
+    setSelectedCardSizes((prev) => ({ ...prev, [productId]: size }));
+  };
+
+  const getCardImage = (product) => cardActiveImages[product.id] || product.image;
+
+  const handleSelectCardImage = (productId, imgUrl) => {
+    setCardActiveImages((prev) => ({ ...prev, [productId]: imgUrl }));
+  };
 
   // Format currency helper
   const formatPrice = (amount) => {
@@ -212,6 +319,14 @@ function App() {
     });
 
     addToast(`Added "${product.title}" (${size}) to your bag!`);
+  };
+
+  // Instant Buy Now handler
+  const handleBuyNow = (product) => {
+    const size = getSelectedSize(product.id);
+    handleAddToCart(product, size);
+    setIsCartOpen(false);
+    setIsCheckoutOpen(true);
   };
 
   // Cart Qty Adjuster
@@ -266,12 +381,8 @@ function App() {
       {/* Header & Navigation */}
       <header className="site-header">
         <div className="nav-inner">
-          <a href="#home" className="brand-logo">
-            <div className="brand-symbol">K</div>
-            <div>
-              <div className="brand-name">klasik</div>
-              <div className="brand-tagline">WARDROBE</div>
-            </div>
+          <a href="#home" className="brand-logo" aria-label="Klasik Wardrobe Home">
+            <KlasikLogo height={44} className="header-logo" fill="#0f172a" />
           </a>
 
           {/* Search Box */}
@@ -300,65 +411,37 @@ function App() {
       </header>
 
       <main className="main-content" id="home">
-        {/* Hero Section */}
-        <section className="hero-section">
-          <div className="hero-content">
-            <div className="hero-pill">
-              <span>✦</span> Heavyweight Cotton Architecture
+        {/* Streamlined Catalog Top Header */}
+        <section className="catalog-hero-banner">
+          <div className="catalog-banner-info">
+            <div className="collection-badge">
+              <span>✦</span> HEAVYWEIGHT T-SHIRT COLLECTION
             </div>
-            <h1 className="hero-title">
-              Elegance Redefined in <span className="text-gold">Heavyweight</span> T-Shirts.
+            <h1 className="catalog-hero-title">
+              Luxury Streetwear & <span className="text-gold">Heavyweight</span> T-Shirts
             </h1>
-            <p className="hero-subtitle">
-              Precision-cut streetwear and luxury tailored T-shirts. Engineered with 240 to 300 GSM organic cotton and silk blends. Priced transparently at ₦30,000, ₦35,000, and ₦40,000.
+            <p className="catalog-hero-desc">
+              Select your T-shirt below to purchase. Fast delivery across Nigeria • Transparent Pricing: ₦30,000 | ₦35,000 | ₦40,000
             </p>
-
-            <div className="hero-actions">
-              <a href="#catalog" className="btn-primary">
-                Explore Collection
-              </a>
-              <button className="btn-secondary" onClick={() => setIsSizeGuideOpen(true)}>
-                View Size Chart
-              </button>
-            </div>
-
-            <div className="hero-highlights">
-              <div className="highlight-card">
-                <div className="highlight-icon">💎</div>
-                <h4>₦30,000 Tier</h4>
-                <p>Essential 240 GSM Organic Cotton</p>
-              </div>
-              <div className="highlight-card">
-                <div className="highlight-icon">🔥</div>
-                <h4>₦35,000 Tier</h4>
-                <p>Signature Vintage Acid Wash</p>
-              </div>
-              <div className="highlight-card">
-                <div className="highlight-icon">👑</div>
-                <h4>₦40,000 Tier</h4>
-                <p>Executive Cotton-Silk Blend</p>
-              </div>
-            </div>
           </div>
 
-          <div className="hero-gallery">
-            <div className="hero-main-card">
-              <img
-                src="/images/black_tee.jpg"
-                onError={(e) => {
-                  e.target.src = 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800&auto=format&fit=crop';
-                }}
-                alt="Klassic Heavyweight Black Tee"
-              />
-              <div className="hero-card-badge">
-                <strong>Klassic Essential Noir Tee</strong>
-                <span>₦30,000 — 240 GSM Heavy Cotton</span>
-              </div>
-            </div>
+          <div className="quick-tier-pills">
+            <button className={`tier-chip ${selectedPrice === 'ALL' ? 'active' : ''}`} onClick={() => setSelectedPrice('ALL')}>
+              All T-Shirts ({PRODUCTS.length})
+            </button>
+            <button className={`tier-chip ${selectedPrice === '30000' ? 'active' : ''}`} onClick={() => setSelectedPrice('30000')}>
+              💎 ₦30,000 Essential
+            </button>
+            <button className={`tier-chip ${selectedPrice === '35000' ? 'active' : ''}`} onClick={() => setSelectedPrice('35000')}>
+              🔥 ₦35,000 Signature
+            </button>
+            <button className={`tier-chip ${selectedPrice === '40000' ? 'active' : ''}`} onClick={() => setSelectedPrice('40000')}>
+              👑 ₦40,000 Executive
+            </button>
           </div>
         </section>
 
-        {/* Filter Bar */}
+        {/* Filter Bar & Product Catalog */}
         <section id="catalog" style={{ scrollMarginTop: '100px' }}>
           <div className="filter-bar">
             {/* Price Filter */}
@@ -423,7 +506,7 @@ function App() {
           {/* Product Grid */}
           <div className="product-grid">
             {filteredProducts.length === 0 ? (
-              <div style={{ gridColumn: '1 / -1', textAlignment: 'center', padding: '60px 20px', background: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--surface-border)' }}>
+              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px 20px', background: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--surface-border)' }}>
                 <h3>No t-shirts match your search criteria</h3>
                 <p style={{ color: 'var(--text-muted)', marginTop: '8px' }}>
                   Try adjusting your price tier filter or search term.
@@ -445,7 +528,7 @@ function App() {
                 <div key={product.id} className="product-card">
                   <div className="product-image-box">
                     <img
-                      src={product.image}
+                      src={getCardImage(product)}
                       onError={(e) => {
                         e.target.src = product.fallbackImage;
                       }}
@@ -454,16 +537,41 @@ function App() {
                     <span className="price-tag-pill">{formatPrice(product.price)}</span>
                     {product.tag && <span className="badge-tag">{product.tag}</span>}
 
+                    {/* Multi-angle Image Thumbnails */}
+                    {product.gallery && product.gallery.length > 1 && (
+                      <div className="card-image-thumbs">
+                        {product.gallery.map((imgUrl, i) => {
+                          const isActive = getCardImage(product) === imgUrl;
+                          const labels = ['Front', 'Back', 'Fit'];
+                          return (
+                            <button
+                              key={i}
+                              type="button"
+                              className={`img-thumb-btn ${isActive ? 'active' : ''}`}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleSelectCardImage(product.id, imgUrl);
+                              }}
+                              title={`View ${labels[i] || 'Angle'}`}
+                            >
+                              <img src={imgUrl} alt={`${labels[i]} preview`} />
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+
                     <div className="quick-view-overlay">
                       <button
                         className="btn-quick-view"
                         onClick={() => {
                           setQuickViewProduct(product);
-                          setQuickViewSize('L');
+                          setQuickViewActiveImg(product.image);
+                          setQuickViewSize(getSelectedSize(product.id));
                           setQuickViewColor(product.colors[0]?.name || '');
                         }}
                       >
-                        Quick View & Specs
+                        📷 View Gallery & Specs
                       </button>
                     </div>
                   </div>
@@ -474,12 +582,26 @@ function App() {
                     <p className="product-desc">{product.description}</p>
 
                     <div className="card-options">
-                      <div className="size-pills">
-                        {product.sizes.map((s) => (
-                          <span key={s} className="size-pill">
-                            {s}
-                          </span>
-                        ))}
+                      <div className="card-size-selector">
+                        <span className="size-label">Select Size:</span>
+                        <div className="size-pills">
+                          {product.sizes.map((s) => {
+                            const isSelected = getSelectedSize(product.id) === s;
+                            return (
+                              <button
+                                key={s}
+                                type="button"
+                                className={`size-pill ${isSelected ? 'active' : ''}`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleSelectCardSize(product.id, s);
+                                }}
+                              >
+                                {s}
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
 
                       <div className="color-dots">
@@ -494,10 +616,20 @@ function App() {
                       </div>
                     </div>
 
-                    <button className="btn-add-cart" onClick={() => handleAddToCart(product, 'L')}>
-                      <span>🛒 Add to Bag</span>
-                      <span>— {formatPrice(product.price)}</span>
-                    </button>
+                    <div className="card-action-row">
+                      <button
+                        className="btn-add-cart"
+                        onClick={() => handleAddToCart(product, getSelectedSize(product.id))}
+                      >
+                        🛒 Add to Bag
+                      </button>
+                      <button
+                        className="btn-buy-now"
+                        onClick={() => handleBuyNow(product)}
+                      >
+                        ⚡ Buy Now
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))
@@ -505,37 +637,32 @@ function App() {
           </div>
         </section>
 
-        {/* Lookbook / Styling Section */}
-        <section className="section-title-box">
-          <p style={{ color: 'var(--text-gold)', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-            Lookbook & Editorial
-          </p>
-          <h2>Crafted for the Discerning Wardrobe</h2>
-          <p style={{ color: 'var(--text-muted)' }}>
-            Every Klassic t-shirt is designed with structured drop-shoulders and pre-shrunk fabrics to maintain perfection after every wash.
-          </p>
+        {/* T-Shirt Visual Gallery Showcase */}
+        <section className="section-title-box" style={{ marginTop: '70px' }}>
+          <div className="collection-badge">✦ VISUAL GALLERY SHOWCASE</div>
+          <h2>T-Shirt Fit & Fabric Gallery</h2>
         </section>
 
         <div className="lookbook-grid">
           <div className="lookbook-card">
-            <img src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=800&auto=format&fit=crop" alt="Essential Noir Look" />
+            <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800&auto=format&fit=crop" alt="Noir Organic Fit" />
             <div className="lookbook-overlay">
-              <strong style={{ fontFamily: 'var(--font-serif)', fontSize: '1.2rem', color: '#fff' }}>Essential ₦30,000 Drop</strong>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-gold)' }}>Daily Heavyweight Organic Basics</p>
+              <strong style={{ fontFamily: 'var(--font-serif)', fontSize: '1.1rem', color: '#fff' }}>Essential 240 GSM Noir</strong>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-gold)' }}>₦30,000 Tier — Heavyweight Fit</p>
             </div>
           </div>
           <div className="lookbook-card">
-            <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800&auto=format&fit=crop" alt="Vintage Wash Look" />
+            <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800&auto=format&fit=crop" alt="Acid Wash Detail" />
             <div className="lookbook-overlay">
-              <strong style={{ fontFamily: 'var(--font-serif)', fontSize: '1.2rem', color: '#fff' }}>Signature ₦35,000 Wash</strong>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-gold)' }}>Hand-Finished Acid Distressed</p>
+              <strong style={{ fontFamily: 'var(--font-serif)', fontSize: '1.1rem', color: '#fff' }}>Signature Acid Wash</strong>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-gold)' }}>₦35,000 Tier — Vintage Distressed</p>
             </div>
           </div>
           <div className="lookbook-card">
-            <img src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=800&auto=format&fit=crop" alt="Executive Silk Look" />
+            <img src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=800&auto=format&fit=crop" alt="Mulberry Silk Tailored Fit" />
             <div className="lookbook-overlay">
-              <strong style={{ fontFamily: 'var(--font-serif)', fontSize: '1.2rem', color: '#fff' }}>Executive ₦40,000 Silk</strong>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-gold)' }}>Mulberry Silk Blend & Gold Hem</p>
+              <strong style={{ fontFamily: 'var(--font-serif)', fontSize: '1.1rem', color: '#fff' }}>Executive Cotton-Silk</strong>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-gold)' }}>₦40,000 Tier — Gold Hem Tag</p>
             </div>
           </div>
         </div>
@@ -585,12 +712,36 @@ function App() {
             <div className="modal-grid">
               <div className="modal-image-col">
                 <img
-                  src={quickViewProduct.image}
+                  src={quickViewActiveImg || quickViewProduct.image}
                   onError={(e) => {
                     e.target.src = quickViewProduct.fallbackImage;
                   }}
                   alt={quickViewProduct.title}
                 />
+                {quickViewProduct.gallery && (
+                  <div className="modal-gallery-thumbs" style={{ display: 'flex', gap: '8px', marginTop: '12px', justifyContent: 'center' }}>
+                    {quickViewProduct.gallery.map((imgUrl, idx) => {
+                      const isCurrent = (quickViewActiveImg || quickViewProduct.image) === imgUrl;
+                      return (
+                        <img
+                          key={idx}
+                          src={imgUrl}
+                          alt={`Angle ${idx + 1}`}
+                          style={{
+                            width: '54px',
+                            height: '54px',
+                            objectFit: 'cover',
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            border: isCurrent ? '2px solid var(--gold-primary)' : '1px solid var(--surface-border)',
+                            opacity: isCurrent ? 1 : 0.6,
+                          }}
+                          onClick={() => setQuickViewActiveImg(imgUrl)}
+                        />
+                      );
+                    })}
+                  </div>
+                )}
               </div>
 
               <div className="modal-details-col">
@@ -973,10 +1124,9 @@ function App() {
       <footer className="site-footer">
         <div className="footer-inner">
           <div>
-            <div className="brand-logo" style={{ marginBottom: '16px' }}>
-              <div className="brand-symbol">K</div>
-              <div className="brand-name">KLASSIC WARDROBE</div>
-            </div>
+            <a href="#home" className="brand-logo" style={{ marginBottom: '16px', display: 'inline-block' }} aria-label="Klasik Wardrobe Home">
+              <KlasikLogo height={50} className="footer-logo gold-version" fill="#f3c649" />
+            </a>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', maxWidth: '320px', lineHeight: '1.6' }}>
               Luxury streetwear & heavyweight t-shirts engineered with organic cotton and mulberry silk. Transparent pricing at ₦30,000, ₦35,000, and ₦40,000.
             </p>
