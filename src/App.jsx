@@ -192,11 +192,11 @@ function KlasikLogo({ height = 48, className = '', fill = 'currentColor' }) {
         {/* Top-Left Bracket & Speed Marks */}
         <path d="M 42 28 L 42 62 M 42 28 L 78 28" stroke={fill} strokeWidth="4" strokeLinecap="square" />
         <path d="M 54 18 L 98 18" stroke={fill} strokeWidth="2.5" strokeLinecap="round" />
-        
+
         {/* Top-Right Speed Marks */}
         <path d="M 235 22 L 310 18" stroke={fill} strokeWidth="3" strokeLinecap="round" />
         <path d="M 255 12 L 335 8" stroke={fill} strokeWidth="2.5" strokeLinecap="round" />
-        
+
         {/* KLASIK Text */}
         <text
           x="205"
@@ -210,7 +210,7 @@ function KlasikLogo({ height = 48, className = '', fill = 'currentColor' }) {
         >
           KLASIK
         </text>
-        
+
         {/* WARDROBE Text */}
         <text
           x="205"
@@ -224,11 +224,11 @@ function KlasikLogo({ height = 48, className = '', fill = 'currentColor' }) {
         >
           WARDROBE
         </text>
-        
+
         {/* Bottom-Left Speed Marks */}
         <path d="M 68 152 L 132 152" stroke={fill} strokeWidth="3" strokeLinecap="round" />
         <path d="M 78 162 L 122 162" stroke={fill} strokeWidth="2.5" strokeLinecap="round" />
-        
+
         {/* Bottom-Right Bracket & Speed Marks */}
         <path d="M 185 142 L 358 142 L 358 115" stroke={fill} strokeWidth="3.5" strokeLinecap="square" strokeLinejoin="miter" />
         <path d="M 370 128 L 370 156 M 345 156 L 370 156" stroke={fill} strokeWidth="4" strokeLinecap="square" />
