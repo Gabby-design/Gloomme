@@ -26,6 +26,9 @@ export default {
       },
       transitionTimingFunction: {
         'avant-garde': 'cubic-bezier(0.16, 1, 0.3, 1)',
+      },
+      boxShadow: {
+        'premium-diffused': '0 40px 80px -10px rgba(0, 0, 0, 0.04)',
       }
     },
   },

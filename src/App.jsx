@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import './index.css';
 
 // Product Catalog aligned with ₦30,000, ₦35,000, and ₦40,000 pricing structure
@@ -240,7 +240,38 @@ function KlasikLogo({ height = 48, className = '', fill = 'currentColor' }) {
   );
 }
 
+function AvantGardeButton({ children, onClick, className = '' }) {
+  return (
+    <motion.button
+      onClick={onClick}
+      className={`relative overflow-hidden bg-transparent text-foreground border border-foreground font-sans text-xs uppercase tracking-[0.2em] px-6 py-3 transition-colors duration-300 group ${className}`}
+      whileHover="hover"
+      initial="initial"
+    >
+      <motion.div
+        className="absolute inset-0 bg-foreground z-0"
+        variants={{
+          initial: { scaleY: 0, transformOrigin: 'bottom' },
+          hover: { scaleY: 1, transformOrigin: 'bottom' }
+        }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+      />
+      <span className="relative z-10 group-hover:text-background transition-colors duration-300">
+        {children}
+      </span>
+    </motion.button>
+  );
+}
+
 function App() {
+  const { scrollY } = useScroll();
+  const heroScale = useTransform(scrollY, [0, 800], [1, 1.2]);
+  const starRotate = useTransform(scrollY, [0, 1000], [0, 360]);
+
+  const targetRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: targetRef });
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-80%"]);
+
   const [selectedPrice, setSelectedPrice] = useState('ALL');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [searchQuery, setSearchQuery] = useState('');
@@ -374,59 +405,73 @@ function App() {
         ))}
       </div>
 
-      {/* Top Announcement Bar */}
-      <div style={{ background: 'var(--text-main)', color: 'var(--bg-main)', padding: '8px 16px', textAlign: 'center', fontSize: '0.75rem', fontWeight: 500, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
-        FREE COMPLIMENTARY EXPRESS DELIVERY ACROSS NIGERIA ON ORDERS OVER ₦70,000
+      {/* Fixed Navigation Container */}
+      <div className="fixed top-0 w-full z-50 flex flex-col">
+        {/* Top Announcement Bar */}
+        <div className="bg-foreground text-background px-4 py-2 text-center text-xs font-medium tracking-[0.15em] uppercase">
+          FREE COMPLIMENTARY EXPRESS DELIVERY ACROSS NIGERIA ON ORDERS OVER ₦70,000
+        </div>
+
+        {/* Header & Navigation */}
+        <header className="w-full bg-background/90 backdrop-blur-md border-b border-foreground/10 px-6 py-4">
+          <div className="flex justify-between items-center max-w-7xl mx-auto">
+            <a href="#home" className="" aria-label="Klasik Wardrobe Home">
+              <KlasikLogo height={44} className="fill-foreground" />
+            </a>
+
+            {/* Search Box */}
+            <div className="hidden md:flex items-center border border-foreground/20 px-3 py-1.5 focus-within:border-foreground transition-colors w-64">
+              <span className="text-sm mr-2 opacity-50">🔍</span>
+              <input
+                type="text"
+                className="bg-transparent border-none outline-none text-sm w-full font-sans"
+                placeholder="Search t-shirts, fabrics..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+
+            {/* Nav Actions */}
+            <div className="flex items-center gap-6">
+              <button className="text-xs uppercase tracking-[0.15em] font-medium hover:opacity-70 transition-opacity" onClick={() => setIsSizeGuideOpen(true)}>
+                Size Guide
+              </button>
+              <button className="flex items-center gap-2 text-xs uppercase tracking-[0.15em] font-medium hover:opacity-70 transition-opacity" onClick={() => setIsCartOpen(true)}>
+                <span>BAG</span>
+                <span className="bg-foreground text-background text-[10px] px-1.5 py-0.5 rounded-full min-w-[20px] text-center">{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
+              </button>
+            </div>
+          </div>
+        </header>
       </div>
 
-      {/* Header & Navigation */}
-      <header className="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-md border-b border-foreground/10 px-6 py-4">
-        <div className="flex justify-between items-center max-w-7xl mx-auto">
-          <a href="#home" className="" aria-label="Klasik Wardrobe Home">
-            <KlasikLogo height={44} className="fill-foreground" />
-          </a>
-
-          {/* Search Box */}
-          <div className="hidden md:flex items-center border border-foreground/20 px-3 py-1.5 focus-within:border-foreground transition-colors w-64">
-            <span className="text-sm mr-2 opacity-50">🔍</span>
-            <input
-              type="text"
-              className="bg-transparent border-none outline-none text-sm w-full font-sans"
-              placeholder="Search t-shirts, fabrics..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-
-          {/* Nav Actions */}
-          <div className="flex items-center gap-6">
-            <button className="text-xs uppercase tracking-[0.15em] font-medium hover:opacity-70 transition-opacity" onClick={() => setIsSizeGuideOpen(true)}>
-              Size Guide
-            </button>
-            <button className="flex items-center gap-2 text-xs uppercase tracking-[0.15em] font-medium hover:opacity-70 transition-opacity" onClick={() => setIsCartOpen(true)}>
-              <span>BAG</span>
-              <span className="bg-foreground text-background text-[10px] px-1.5 py-0.5 rounded-full min-w-[20px] text-center">{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <main className="w-full pt-[76px]" id="home">
+      <main className="w-full" id="home">
         {/* Editorial Hero Banner */}
         <section className="relative w-full h-[90vh] overflow-hidden">
-          <video 
-            className="absolute inset-0 w-full h-full object-cover" 
-            autoPlay 
-            loop 
-            muted 
+          <motion.video
+            style={{ scale: heroScale }}
+            className="absolute inset-0 w-full h-full object-cover"
+            autoPlay
+            loop
+            muted
             playsInline
             poster="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=2000&auto=format&fit=crop"
           >
             {/* Using a placeholder fashion video from a reliable source */}
             <source src="https://assets.mixkit.co/videos/preview/mixkit-fashion-model-walking-in-a-red-dress-41619-large.mp4" type="video/mp4" />
-          </video>
-          <div className="absolute bottom-12 left-6 md:bottom-20 md:left-20 z-10 text-left text-foreground max-w-2xl">
-            <motion.h1 
+          </motion.video>
+
+          {/* Rotating 4-Point Star */}
+          <motion.div
+            className="absolute top-1/4 right-12 md:right-32 z-20 text-foreground"
+            style={{ rotate: starRotate }}
+          >
+            <svg width="80" height="80" viewBox="0 0 100 100" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M50 0 C50 30 70 50 100 50 C70 50 50 70 50 100 C50 70 30 50 0 50 C30 50 50 30 50 0 Z" />
+            </svg>
+          </motion.div>
+          <div className="absolute bottom-12 left-6 md:bottom-20 md:left-20 z-50 text-left text-white mix-blend-difference max-w-2xl">
+            <motion.h1
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
@@ -434,7 +479,7 @@ function App() {
             >
               Defined by details.
             </motion.h1>
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
@@ -445,40 +490,12 @@ function App() {
           </div>
         </section>
 
-        {/* Filter Bar & Product Catalog */}
-        <section id="catalog" className="scroll-mt-[100px] max-w-7xl mx-auto px-6 pb-24 pt-12">
-          <div className="flex flex-col md:flex-row gap-8 justify-between items-start md:items-center mb-16">
-            {/* Minimalist Filter Bar */}
-            <div className="flex flex-wrap items-center gap-6">
-              <span className="font-serif text-sm tracking-[0.2em] uppercase text-foreground/50 mr-2">PRICE</span>
-              <button
-                className={`text-xs uppercase tracking-[0.1em] pb-1 border-b transition-all duration-300 ${selectedPrice === 'ALL' ? 'border-foreground text-foreground font-medium' : 'border-transparent text-foreground/70 hover:text-foreground'}`}
-                onClick={() => setSelectedPrice('ALL')}
-              >
-                All
-              </button>
-              <button
-                className={`text-xs uppercase tracking-[0.1em] pb-1 border-b transition-all duration-300 ${selectedPrice === '30000' ? 'border-foreground text-foreground font-medium' : 'border-transparent text-foreground/70 hover:text-foreground'}`}
-                onClick={() => setSelectedPrice('30000')}
-              >
-                Essential
-              </button>
-              <button
-                className={`text-xs uppercase tracking-[0.1em] pb-1 border-b transition-all duration-300 ${selectedPrice === '35000' ? 'border-foreground text-foreground font-medium' : 'border-transparent text-foreground/70 hover:text-foreground'}`}
-                onClick={() => setSelectedPrice('35000')}
-              >
-                Signature
-              </button>
-              <button
-                className={`text-xs uppercase tracking-[0.1em] pb-1 border-b transition-all duration-300 ${selectedPrice === '40000' ? 'border-foreground text-foreground font-medium' : 'border-transparent text-foreground/70 hover:text-foreground'}`}
-                onClick={() => setSelectedPrice('40000')}
-              >
-                Executive
-              </button>
-            </div>
+        {/* Filter Bar */}
+        <section id="catalog" className="scroll-mt-[100px] max-w-[1400px] mx-auto px-6 pt-12">
+          <div className="flex justify-center mb-12 w-full">
 
             {/* Category Filter */}
-            <div className="flex flex-wrap items-center gap-6">
+            <div className="flex flex-wrap justify-center items-center gap-6">
               <span className="font-serif text-sm tracking-[0.2em] uppercase text-foreground/50 mr-2">COLLECTION</span>
               <button
                 className={`text-xs uppercase tracking-[0.1em] pb-1 border-b transition-all duration-300 ${selectedCategory === 'ALL' ? 'border-foreground text-foreground font-medium' : 'border-transparent text-foreground/70 hover:text-foreground'}`}
@@ -506,14 +523,16 @@ function App() {
               </button>
             </div>
           </div>
+        </section>
 
-          {/* Product Grid */}
-          <motion.div 
+        {/* Vertical Product Gallery */}
+        <section className="relative bg-background px-6 max-w-[1400px] mx-auto pb-24">
+          <motion.div
             initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
             viewport={{ once: true }}
-            className="columns-1 md:columns-2 lg:columns-3 gap-10"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-16 gap-x-10"
           >
             {filteredProducts.length === 0 ? (
               <div className="col-span-full text-center py-20 px-5">
@@ -534,8 +553,11 @@ function App() {
               </div>
             ) : (
               filteredProducts.map((product, index) => (
-                <div key={product.id} className="break-inside-avoid mb-20 relative w-full inline-block group">
-                  <div className="relative w-full overflow-hidden bg-transparent mb-4">
+                <div
+                  key={product.id}
+                  className="relative group flex flex-col w-full"
+                >
+                  <div className="relative w-full overflow-hidden bg-transparent mb-4 shadow-premium-diffused h-[500px] md:h-[600px]">
                     <motion.img
                       whileHover={{ scale: 1.04 }}
                       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
@@ -544,7 +566,7 @@ function App() {
                         e.target.src = product.fallbackImage;
                       }}
                       alt={product.title}
-                      className={`w-full object-cover origin-center ${index % 2 === 0 ? 'h-[480px]' : (index % 3 === 0 ? 'h-[400px]' : 'h-[600px]')}`}
+                      className="w-full h-full object-cover origin-center"
                     />
                     <span className="absolute top-4 right-4 bg-background/90 backdrop-blur-md text-foreground px-3 py-1 font-serif text-sm tracking-[0.05em] border border-foreground/10">{formatPrice(product.price)}</span>
                     {product.tag && <span className="absolute top-4 left-4 bg-foreground text-background px-2 py-0.5 text-[0.65rem] font-sans uppercase tracking-[0.2em] font-semibold">{product.tag}</span>}
@@ -573,8 +595,7 @@ function App() {
                       </div>
                     )}
                     <div className="absolute inset-0 bg-background/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-30">
-                      <button
-                        className="bg-foreground text-background font-sans text-xs uppercase tracking-[0.2em] px-6 py-3 border border-transparent hover:bg-transparent hover:text-foreground hover:border-foreground transition-all duration-[700ms]"
+                      <AvantGardeButton
                         onClick={() => {
                           setQuickViewProduct(product);
                           setQuickViewActiveImg(product.image);
@@ -583,7 +604,7 @@ function App() {
                         }}
                       >
                         📷 View Gallery & Specs
-                      </button>
+                      </AvantGardeButton>
                     </div>
                   </div>
 
@@ -628,18 +649,18 @@ function App() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                      <button
-                        className="w-full bg-transparent text-foreground border border-foreground font-sans text-xs uppercase tracking-[0.2em] py-3 hover:bg-foreground hover:text-background transition-all duration-[700ms]"
+                      <AvantGardeButton
+                        className="w-full"
                         onClick={() => handleAddToCart(product, getSelectedSize(product.id))}
                       >
                         🛒 Add to Bag
-                      </button>
-                      <button
-                        className="w-full bg-foreground text-background border border-foreground font-sans text-xs uppercase tracking-[0.2em] py-3 hover:bg-transparent hover:text-foreground transition-all duration-[700ms]"
+                      </AvantGardeButton>
+                      <AvantGardeButton
+                        className="w-full"
                         onClick={() => handleBuyNow(product)}
                       >
                         ⚡ Buy Now
-                      </button>
+                      </AvantGardeButton>
                     </div>
                   </div>
                 </div>
@@ -650,7 +671,7 @@ function App() {
 
         {/* Shop the Look Editorial Section */}
         <section className="relative w-full max-w-7xl mx-auto px-6 py-24 border-t border-foreground/10 flex flex-col md:flex-row gap-16 items-center">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
@@ -660,11 +681,11 @@ function App() {
             <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1200&auto=format&fit=crop" alt="Shop the look editorial" className="w-full h-[80vh] object-cover" />
             <div className="absolute -bottom-6 -right-6 md:-right-12 bg-background p-4 border border-foreground/10 shadow-sm z-10 font-serif text-lg tracking-[0.02em]">Look 01 — The Essential Utility</div>
           </motion.div>
-          
+
           <div className="w-full md:w-1/2 flex flex-col gap-12 md:pl-10">
             <h2 className="font-serif text-[clamp(2.5rem,5vw,4.5rem)] font-bold tracking-[-0.05em] leading-[0.9]">Shop The Look</h2>
-            
-            <motion.div 
+
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
@@ -677,11 +698,11 @@ function App() {
               <div className="flex flex-col gap-2 flex-1">
                 <h3 className="font-serif text-xl tracking-[0.02em]">Essential 240 GSM Noir</h3>
                 <span className="font-sans text-sm tracking-[0.1em] text-foreground/60">₦30,000</span>
-                <button className="self-start mt-2 bg-transparent text-foreground border border-foreground font-sans text-[0.65rem] uppercase tracking-[0.2em] px-6 py-2 hover:bg-foreground hover:text-background transition-all duration-[700ms]">Add to Bag</button>
+                <AvantGardeButton className="self-start mt-2">Add to Bag</AvantGardeButton>
               </div>
             </motion.div>
-            
-            <motion.div 
+
+            <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
@@ -694,7 +715,7 @@ function App() {
               <div className="flex flex-col gap-2 flex-1">
                 <h3 className="font-serif text-xl tracking-[0.02em]">Executive Cotton-Silk</h3>
                 <span className="font-sans text-sm tracking-[0.1em] text-foreground/60">₦40,000</span>
-                <button className="self-start mt-2 bg-transparent text-foreground border border-foreground font-sans text-[0.65rem] uppercase tracking-[0.2em] px-6 py-2 hover:bg-foreground hover:text-background transition-all duration-[700ms]">Add to Bag</button>
+                <AvantGardeButton className="self-start mt-2">Add to Bag</AvantGardeButton>
               </div>
             </motion.div>
           </div>
@@ -704,12 +725,12 @@ function App() {
       {/* Quick View Modal */}
       {quickViewProduct && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-foreground/30 backdrop-blur-sm p-4" onClick={() => setQuickViewProduct(null)}>
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-5xl bg-background border border-foreground/10 overflow-hidden flex flex-col md:flex-row max-h-[90vh] md:max-h-none overflow-y-auto" 
+            className="relative w-full max-w-5xl bg-background border border-foreground/10 overflow-hidden flex flex-col md:flex-row max-h-[90vh] md:max-h-none overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
             <button className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center bg-background/50 backdrop-blur-md text-foreground font-sans text-xl border border-foreground/10 hover:bg-foreground hover:text-background transition-colors duration-300" onClick={() => setQuickViewProduct(null)}>
@@ -803,12 +824,12 @@ function App() {
       {/* Size Guide Modal */}
       {isSizeGuideOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-foreground/30 backdrop-blur-sm p-4" onClick={() => setIsSizeGuideOpen(false)}>
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-2xl bg-background border border-foreground/10 p-8 md:p-12 overflow-y-auto max-h-[90vh]" 
+            className="relative w-full max-w-2xl bg-background border border-foreground/10 p-8 md:p-12 overflow-y-auto max-h-[90vh]"
             onClick={(e) => e.stopPropagation()}
           >
             <button className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center text-foreground font-sans text-xl hover:opacity-50 transition-opacity" onClick={() => setIsSizeGuideOpen(false)}>
@@ -871,12 +892,12 @@ function App() {
       {/* Cart Drawer */}
       {isCartOpen && (
         <div className="fixed inset-0 z-[100] flex justify-end bg-foreground/30 backdrop-blur-sm" onClick={() => setIsCartOpen(false)}>
-          <motion.div 
+          <motion.div
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="w-full max-w-md bg-background border-l border-foreground/10 h-full flex flex-col shadow-2xl" 
+            className="w-full max-w-md bg-background border-l border-foreground/10 h-full flex flex-col shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center px-6 py-5 border-b border-foreground/10 bg-background z-10">
@@ -981,12 +1002,12 @@ function App() {
       {/* Checkout Modal */}
       {isCheckoutOpen && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-foreground/30 backdrop-blur-sm p-4" onClick={() => setIsCheckoutOpen(false)}>
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-2xl bg-background border border-foreground/10 p-8 md:p-12 overflow-y-auto max-h-[90vh]" 
+            className="relative w-full max-w-2xl bg-background border border-foreground/10 p-8 md:p-12 overflow-y-auto max-h-[90vh]"
             onClick={(e) => e.stopPropagation()}
           >
             <button className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center text-foreground font-sans text-xl hover:opacity-50 transition-opacity" onClick={() => setIsCheckoutOpen(false)}>
