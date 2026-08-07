@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import './index.css';
 
 // Product Catalog aligned with ₦30,000, ₦35,000, and ₦40,000 pricing structure
@@ -240,18 +241,8 @@ function KlasikLogo({ height = 48, className = '', fill = 'currentColor' }) {
 }
 
 function App() {
-  const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'light');
   const [selectedPrice, setSelectedPrice] = useState('ALL');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
-  };
   const [searchQuery, setSearchQuery] = useState('');
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
@@ -384,23 +375,23 @@ function App() {
       </div>
 
       {/* Top Announcement Bar */}
-      <div style={{ background: 'var(--gold-gradient)', color: '#000', padding: '6px 16px', textAlign: 'center', fontSize: '0.82rem', fontWeight: 800, letterSpacing: '0.05em' }}>
+      <div style={{ background: 'var(--text-main)', color: 'var(--bg-main)', padding: '8px 16px', textAlign: 'center', fontSize: '0.75rem', fontWeight: 500, letterSpacing: '0.15em', textTransform: 'uppercase' }}>
         FREE COMPLIMENTARY EXPRESS DELIVERY ACROSS NIGERIA ON ORDERS OVER ₦70,000
       </div>
 
       {/* Header & Navigation */}
-      <header className="site-header">
-        <div className="nav-inner">
-          <a href="#home" className="brand-logo" aria-label="Klasik Wardrobe Home">
-            <KlasikLogo height={44} className="header-logo" fill={theme === 'dark' ? '#ffffff' : '#0f172a'} />
+      <header className="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-md border-b border-foreground/10 px-6 py-4">
+        <div className="flex justify-between items-center max-w-7xl mx-auto">
+          <a href="#home" className="" aria-label="Klasik Wardrobe Home">
+            <KlasikLogo height={44} className="fill-foreground" />
           </a>
 
           {/* Search Box */}
-          <div className="search-wrapper">
-            <span className="search-icon">🔍</span>
+          <div className="hidden md:flex items-center border border-foreground/20 px-3 py-1.5 focus-within:border-foreground transition-colors w-64">
+            <span className="text-sm mr-2 opacity-50">🔍</span>
             <input
               type="text"
-              className="search-input"
+              className="bg-transparent border-none outline-none text-sm w-full font-sans"
               placeholder="Search t-shirts, fabrics..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -408,135 +399,130 @@ function App() {
           </div>
 
           {/* Nav Actions */}
-          <div className="nav-actions">
-            <button
-              className={`theme-toggle-switch ${theme}`}
-              onClick={toggleTheme}
-              aria-label="Toggle Light and Dark Theme"
-              title={`Switch to ${theme === 'light' ? 'Dark' : 'Light'} Mode`}
-            >
-              <span className="toggle-track">
-                <span className="toggle-icon sun">☀️</span>
-                <span className="toggle-icon moon">🌙</span>
-                <span className="toggle-thumb" />
-              </span>
-              <span className="toggle-label">{theme === 'light' ? 'Light' : 'Dark'}</span>
-            </button>
-            <button className="filter-btn" onClick={() => setIsSizeGuideOpen(true)}>
+          <div className="flex items-center gap-6">
+            <button className="text-xs uppercase tracking-[0.15em] font-medium hover:opacity-70 transition-opacity" onClick={() => setIsSizeGuideOpen(true)}>
               Size Guide
             </button>
-            <button className="cart-trigger-btn" onClick={() => setIsCartOpen(true)}>
+            <button className="flex items-center gap-2 text-xs uppercase tracking-[0.15em] font-medium hover:opacity-70 transition-opacity" onClick={() => setIsCartOpen(true)}>
               <span>BAG</span>
-              <span className="cart-badge">{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
+              <span className="bg-foreground text-background text-[10px] px-1.5 py-0.5 rounded-full min-w-[20px] text-center">{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
             </button>
           </div>
         </div>
       </header>
 
-      <main className="main-content" id="home">
-        {/* Streamlined Catalog Top Header */}
-        <section className="catalog-hero-banner">
-          <div className="catalog-banner-info">
-            <div className="collection-badge">
-              <span>✦</span> HEAVYWEIGHT T-SHIRT COLLECTION
-            </div>
-            <h1 className="catalog-hero-title">
-              Luxury Streetwear & <span className="text-gold">Heavyweight</span> T-Shirts
-            </h1>
-            <p className="catalog-hero-desc">
-              Select your T-shirt below to purchase. Fast delivery across Nigeria • Transparent Pricing: ₦30,000 | ₦35,000 | ₦40,000
-            </p>
-          </div>
-
-          <div className="quick-tier-pills">
-            <button className={`tier-chip ${selectedPrice === 'ALL' ? 'active' : ''}`} onClick={() => setSelectedPrice('ALL')}>
-              All T-Shirts ({PRODUCTS.length})
-            </button>
-            <button className={`tier-chip ${selectedPrice === '30000' ? 'active' : ''}`} onClick={() => setSelectedPrice('30000')}>
-              💎 ₦30,000 Essential
-            </button>
-            <button className={`tier-chip ${selectedPrice === '35000' ? 'active' : ''}`} onClick={() => setSelectedPrice('35000')}>
-              🔥 ₦35,000 Signature
-            </button>
-            <button className={`tier-chip ${selectedPrice === '40000' ? 'active' : ''}`} onClick={() => setSelectedPrice('40000')}>
-              👑 ₦40,000 Executive
-            </button>
+      <main className="w-full pt-[76px]" id="home">
+        {/* Editorial Hero Banner */}
+        <section className="relative w-full h-[90vh] overflow-hidden">
+          <video 
+            className="absolute inset-0 w-full h-full object-cover" 
+            autoPlay 
+            loop 
+            muted 
+            playsInline
+            poster="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=2000&auto=format&fit=crop"
+          >
+            {/* Using a placeholder fashion video from a reliable source */}
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-fashion-model-walking-in-a-red-dress-41619-large.mp4" type="video/mp4" />
+          </video>
+          <div className="absolute bottom-12 left-6 md:bottom-20 md:left-20 z-10 text-left text-foreground max-w-2xl">
+            <motion.h1 
+              initial={{ opacity: 0, y: 25 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+              className="font-serif text-[clamp(3rem,7vw,6.5rem)] font-bold tracking-[-0.05em] leading-[0.9] mb-6"
+            >
+              Defined by details.
+            </motion.h1>
+            <motion.p 
+              initial={{ opacity: 0, y: 25 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+              className="font-sans text-[0.9rem] tracking-[0.25em] uppercase font-medium"
+            >
+              Elevated essentials crafted from premium heavyweight cotton and silk blends.
+            </motion.p>
           </div>
         </section>
 
         {/* Filter Bar & Product Catalog */}
-        <section id="catalog" style={{ scrollMarginTop: '100px' }}>
-          <div className="filter-bar">
-            {/* Price Filter */}
-            <div className="filter-group">
-              <span className="filter-label">Filter Price:</span>
+        <section id="catalog" className="scroll-mt-[100px] max-w-7xl mx-auto px-6 pb-24 pt-12">
+          <div className="flex flex-col md:flex-row gap-8 justify-between items-start md:items-center mb-16">
+            {/* Minimalist Filter Bar */}
+            <div className="flex flex-wrap items-center gap-6">
+              <span className="font-serif text-sm tracking-[0.2em] uppercase text-foreground/50 mr-2">PRICE</span>
               <button
-                className={`filter-btn ${selectedPrice === 'ALL' ? 'active' : ''}`}
+                className={`text-xs uppercase tracking-[0.1em] pb-1 border-b transition-all duration-300 ${selectedPrice === 'ALL' ? 'border-foreground text-foreground font-medium' : 'border-transparent text-foreground/70 hover:text-foreground'}`}
                 onClick={() => setSelectedPrice('ALL')}
               >
-                All Prices
+                All
               </button>
               <button
-                className={`filter-btn ${selectedPrice === '30000' ? 'active' : ''}`}
+                className={`text-xs uppercase tracking-[0.1em] pb-1 border-b transition-all duration-300 ${selectedPrice === '30000' ? 'border-foreground text-foreground font-medium' : 'border-transparent text-foreground/70 hover:text-foreground'}`}
                 onClick={() => setSelectedPrice('30000')}
               >
-                ₦30,000 Tier
+                Essential
               </button>
               <button
-                className={`filter-btn ${selectedPrice === '35000' ? 'active' : ''}`}
+                className={`text-xs uppercase tracking-[0.1em] pb-1 border-b transition-all duration-300 ${selectedPrice === '35000' ? 'border-foreground text-foreground font-medium' : 'border-transparent text-foreground/70 hover:text-foreground'}`}
                 onClick={() => setSelectedPrice('35000')}
               >
-                ₦35,000 Tier
+                Signature
               </button>
               <button
-                className={`filter-btn ${selectedPrice === '40000' ? 'active' : ''}`}
+                className={`text-xs uppercase tracking-[0.1em] pb-1 border-b transition-all duration-300 ${selectedPrice === '40000' ? 'border-foreground text-foreground font-medium' : 'border-transparent text-foreground/70 hover:text-foreground'}`}
                 onClick={() => setSelectedPrice('40000')}
               >
-                ₦40,000 Tier
+                Executive
               </button>
             </div>
 
             {/* Category Filter */}
-            <div className="filter-group">
-              <span className="filter-label">Collection:</span>
+            <div className="flex flex-wrap items-center gap-6">
+              <span className="font-serif text-sm tracking-[0.2em] uppercase text-foreground/50 mr-2">COLLECTION</span>
               <button
-                className={`filter-btn ${selectedCategory === 'ALL' ? 'active' : ''}`}
+                className={`text-xs uppercase tracking-[0.1em] pb-1 border-b transition-all duration-300 ${selectedCategory === 'ALL' ? 'border-foreground text-foreground font-medium' : 'border-transparent text-foreground/70 hover:text-foreground'}`}
                 onClick={() => setSelectedCategory('ALL')}
               >
-                All Collections
+                All
               </button>
               <button
-                className={`filter-btn ${selectedCategory === 'Essential' ? 'active' : ''}`}
+                className={`text-xs uppercase tracking-[0.1em] pb-1 border-b transition-all duration-300 ${selectedCategory === 'Essential' ? 'border-foreground text-foreground font-medium' : 'border-transparent text-foreground/70 hover:text-foreground'}`}
                 onClick={() => setSelectedCategory('Essential')}
               >
-                Essential (₦30k)
+                Essential
               </button>
               <button
-                className={`filter-btn ${selectedCategory === 'Signature' ? 'active' : ''}`}
+                className={`text-xs uppercase tracking-[0.1em] pb-1 border-b transition-all duration-300 ${selectedCategory === 'Signature' ? 'border-foreground text-foreground font-medium' : 'border-transparent text-foreground/70 hover:text-foreground'}`}
                 onClick={() => setSelectedCategory('Signature')}
               >
-                Signature (₦35k)
+                Signature
               </button>
               <button
-                className={`filter-btn ${selectedCategory === 'Executive' ? 'active' : ''}`}
+                className={`text-xs uppercase tracking-[0.1em] pb-1 border-b transition-all duration-300 ${selectedCategory === 'Executive' ? 'border-foreground text-foreground font-medium' : 'border-transparent text-foreground/70 hover:text-foreground'}`}
                 onClick={() => setSelectedCategory('Executive')}
               >
-                Executive (₦40k)
+                Executive
               </button>
             </div>
           </div>
 
           {/* Product Grid */}
-          <div className="product-grid">
+          <motion.div 
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+            className="columns-1 md:columns-2 lg:columns-3 gap-10"
+          >
             {filteredProducts.length === 0 ? (
-              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '60px 20px', background: 'var(--bg-card)', borderRadius: 'var(--radius-lg)', border: '1px solid var(--surface-border)' }}>
-                <h3>No t-shirts match your search criteria</h3>
-                <p style={{ color: 'var(--text-muted)', marginTop: '8px' }}>
-                  Try adjusting your price tier filter or search term.
+              <div className="col-span-full text-center py-20 px-5">
+                <h3 className="font-serif text-2xl text-foreground font-normal">No essentials match your criteria.</h3>
+                <p className="text-foreground/60 mt-3 text-sm tracking-[0.05em]">
+                  Please try adjusting your filter or search term.
                 </p>
                 <button
-                  className="btn-primary"
-                  style={{ marginTop: '20px' }}
+                  className="mt-6 text-xs uppercase tracking-[0.1em] pb-1 border-b border-foreground text-foreground font-medium transition-opacity hover:opacity-70"
                   onClick={() => {
                     setSelectedPrice('ALL');
                     setSelectedCategory('ALL');
@@ -547,22 +533,25 @@ function App() {
                 </button>
               </div>
             ) : (
-              filteredProducts.map((product) => (
-                <div key={product.id} className="product-card">
-                  <div className="product-image-box">
-                    <img
+              filteredProducts.map((product, index) => (
+                <div key={product.id} className="break-inside-avoid mb-20 relative w-full inline-block group">
+                  <div className="relative w-full overflow-hidden bg-transparent mb-4">
+                    <motion.img
+                      whileHover={{ scale: 1.04 }}
+                      transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
                       src={getCardImage(product)}
                       onError={(e) => {
                         e.target.src = product.fallbackImage;
                       }}
                       alt={product.title}
+                      className={`w-full object-cover origin-center ${index % 2 === 0 ? 'h-[480px]' : (index % 3 === 0 ? 'h-[400px]' : 'h-[600px]')}`}
                     />
-                    <span className="price-tag-pill">{formatPrice(product.price)}</span>
-                    {product.tag && <span className="badge-tag">{product.tag}</span>}
+                    <span className="absolute top-4 right-4 bg-background/90 backdrop-blur-md text-foreground px-3 py-1 font-serif text-sm tracking-[0.05em] border border-foreground/10">{formatPrice(product.price)}</span>
+                    {product.tag && <span className="absolute top-4 left-4 bg-foreground text-background px-2 py-0.5 text-[0.65rem] font-sans uppercase tracking-[0.2em] font-semibold">{product.tag}</span>}
 
                     {/* Multi-angle Image Thumbnails */}
                     {product.gallery && product.gallery.length > 1 && (
-                      <div className="card-image-thumbs">
+                      <div className="absolute bottom-4 left-4 flex gap-2 z-20">
                         {product.gallery.map((imgUrl, i) => {
                           const isActive = getCardImage(product) === imgUrl;
                           const labels = ['Front', 'Back', 'Fit'];
@@ -570,23 +559,22 @@ function App() {
                             <button
                               key={i}
                               type="button"
-                              className={`img-thumb-btn ${isActive ? 'active' : ''}`}
+                              className={`w-10 h-10 overflow-hidden border transition-all ${isActive ? 'border-foreground opacity-100' : 'border-transparent opacity-60 hover:opacity-100 hover:border-foreground/50'}`}
                               onClick={(e) => {
                                 e.stopPropagation();
                                 handleSelectCardImage(product.id, imgUrl);
                               }}
                               title={`View ${labels[i] || 'Angle'}`}
                             >
-                              <img src={imgUrl} alt={`${labels[i]} preview`} />
+                              <img src={imgUrl} alt={`${labels[i]} preview`} className="w-full h-full object-cover" />
                             </button>
                           );
                         })}
                       </div>
                     )}
-
-                    <div className="quick-view-overlay">
+                    <div className="absolute inset-0 bg-background/20 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-30">
                       <button
-                        className="btn-quick-view"
+                        className="bg-foreground text-background font-sans text-xs uppercase tracking-[0.2em] px-6 py-3 border border-transparent hover:bg-transparent hover:text-foreground hover:border-foreground transition-all duration-[700ms]"
                         onClick={() => {
                           setQuickViewProduct(product);
                           setQuickViewActiveImg(product.image);
@@ -599,22 +587,22 @@ function App() {
                     </div>
                   </div>
 
-                  <div className="product-details">
-                    <div className="product-category">{product.category} Collection — {product.gsm}</div>
-                    <h3 className="product-title">{product.title}</h3>
-                    <p className="product-desc">{product.description}</p>
+                  <div className="pt-2">
+                    <div className="font-sans text-[0.65rem] uppercase tracking-[0.2em] text-foreground/60 mb-2">{product.category} Collection — {product.gsm}</div>
+                    <h3 className="font-serif text-lg tracking-[0.02em] font-medium leading-snug mb-1">{product.title}</h3>
+                    <p className="font-sans text-sm text-foreground/70 mb-4">{product.description}</p>
 
-                    <div className="card-options">
-                      <div className="card-size-selector">
-                        <span className="size-label">Select Size:</span>
-                        <div className="size-pills">
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex flex-col gap-2">
+                        <span className="font-sans text-[0.65rem] uppercase tracking-[0.2em] text-foreground/60">Select Size:</span>
+                        <div className="flex gap-2">
                           {product.sizes.map((s) => {
                             const isSelected = getSelectedSize(product.id) === s;
                             return (
                               <button
                                 key={s}
                                 type="button"
-                                className={`size-pill ${isSelected ? 'active' : ''}`}
+                                className={`w-8 h-8 flex items-center justify-center border font-sans text-xs transition-all ${isSelected ? 'bg-foreground text-background border-foreground' : 'bg-transparent text-foreground border-foreground/20 hover:border-foreground'}`}
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   handleSelectCardSize(product.id, s);
@@ -627,11 +615,11 @@ function App() {
                         </div>
                       </div>
 
-                      <div className="color-dots">
+                      <div className="flex gap-2 self-end pb-1">
                         {product.colors.map((c) => (
                           <span
                             key={c.name}
-                            className="color-dot"
+                            className="w-4 h-4 rounded-none border border-foreground/10"
                             style={{ backgroundColor: c.hex }}
                             title={c.name}
                           />
@@ -639,15 +627,15 @@ function App() {
                       </div>
                     </div>
 
-                    <div className="card-action-row">
+                    <div className="flex flex-col gap-2">
                       <button
-                        className="btn-add-cart"
+                        className="w-full bg-transparent text-foreground border border-foreground font-sans text-xs uppercase tracking-[0.2em] py-3 hover:bg-foreground hover:text-background transition-all duration-[700ms]"
                         onClick={() => handleAddToCart(product, getSelectedSize(product.id))}
                       >
                         🛒 Add to Bag
                       </button>
                       <button
-                        className="btn-buy-now"
+                        className="w-full bg-foreground text-background border border-foreground font-sans text-xs uppercase tracking-[0.2em] py-3 hover:bg-transparent hover:text-foreground transition-all duration-[700ms]"
                         onClick={() => handleBuyNow(product)}
                       >
                         ⚡ Buy Now
@@ -657,92 +645,88 @@ function App() {
                 </div>
               ))
             )}
-          </div>
+          </motion.div>
         </section>
 
-        {/* T-Shirt Visual Gallery Showcase */}
-        <section className="section-title-box" style={{ marginTop: '70px' }}>
-          <div className="collection-badge">✦ VISUAL GALLERY SHOWCASE</div>
-          <h2>T-Shirt Fit & Fabric Gallery</h2>
-        </section>
-
-        <div className="lookbook-grid">
-          <div className="lookbook-card">
-            <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800&auto=format&fit=crop" alt="Noir Organic Fit" />
-            <div className="lookbook-overlay">
-              <strong style={{ fontFamily: 'var(--font-serif)', fontSize: '1.1rem', color: '#fff' }}>Essential 240 GSM Noir</strong>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-gold)' }}>₦30,000 Tier — Heavyweight Fit</p>
-            </div>
-          </div>
-          <div className="lookbook-card">
-            <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800&auto=format&fit=crop" alt="Acid Wash Detail" />
-            <div className="lookbook-overlay">
-              <strong style={{ fontFamily: 'var(--font-serif)', fontSize: '1.1rem', color: '#fff' }}>Signature Acid Wash</strong>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-gold)' }}>₦35,000 Tier — Vintage Distressed</p>
-            </div>
-          </div>
-          <div className="lookbook-card">
-            <img src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=800&auto=format&fit=crop" alt="Mulberry Silk Tailored Fit" />
-            <div className="lookbook-overlay">
-              <strong style={{ fontFamily: 'var(--font-serif)', fontSize: '1.1rem', color: '#fff' }}>Executive Cotton-Silk</strong>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-gold)' }}>₦40,000 Tier — Gold Hem Tag</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Client Reviews Section */}
-        <section className="section-title-box" style={{ marginTop: '80px' }}>
-          <p style={{ color: 'var(--text-gold)', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-            Client Reviews
-          </p>
-          <h2>Trusted by Fashion Connoisseurs</h2>
-        </section>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
-          {REVIEWS.map((rev) => (
-            <div
-              key={rev.name}
-              style={{
-                background: 'var(--bg-card)',
-                border: '1px solid var(--surface-border)',
-                borderRadius: 'var(--radius-lg)',
-                padding: '28px',
-                backdropFilter: 'blur(12px)',
-              }}
+        {/* Shop the Look Editorial Section */}
+        <section className="relative w-full max-w-7xl mx-auto px-6 py-24 border-t border-foreground/10 flex flex-col md:flex-row gap-16 items-center">
+          <motion.div 
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+            viewport={{ once: true }}
+            className="w-full md:w-1/2 relative"
+          >
+            <img src="https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1200&auto=format&fit=crop" alt="Shop the look editorial" className="w-full h-[80vh] object-cover" />
+            <div className="absolute -bottom-6 -right-6 md:-right-12 bg-background p-4 border border-foreground/10 shadow-sm z-10 font-serif text-lg tracking-[0.02em]">Look 01 — The Essential Utility</div>
+          </motion.div>
+          
+          <div className="w-full md:w-1/2 flex flex-col gap-12 md:pl-10">
+            <h2 className="font-serif text-[clamp(2.5rem,5vw,4.5rem)] font-bold tracking-[-0.05em] leading-[0.9]">Shop The Look</h2>
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+              viewport={{ once: true }}
+              className="flex items-center gap-6 group"
             >
-              <div style={{ color: '#f5c518', fontSize: '1.1rem', marginBottom: '12px' }}>
-                {'★'.repeat(rev.rating)}
+              <div className="w-32 h-40 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=600&auto=format&fit=crop" alt="T-Shirt" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
               </div>
-              <p style={{ fontStyle: 'italic', color: 'var(--text-main)', marginBottom: '20px', lineHeight: '1.6' }}>
-                “{rev.comment}”
-              </p>
-              <div>
-                <strong style={{ display: 'block', color: 'var(--text-main)' }}>{rev.name}</strong>
-                <small style={{ color: 'var(--text-muted)' }}>{rev.role}</small>
+              <div className="flex flex-col gap-2 flex-1">
+                <h3 className="font-serif text-xl tracking-[0.02em]">Essential 240 GSM Noir</h3>
+                <span className="font-sans text-sm tracking-[0.1em] text-foreground/60">₦30,000</span>
+                <button className="self-start mt-2 bg-transparent text-foreground border border-foreground font-sans text-[0.65rem] uppercase tracking-[0.2em] px-6 py-2 hover:bg-foreground hover:text-background transition-all duration-[700ms]">Add to Bag</button>
               </div>
-            </div>
-          ))}
-        </div>
+            </motion.div>
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+              viewport={{ once: true }}
+              className="flex items-center gap-6 group md:ml-12"
+            >
+              <div className="w-32 h-40 overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=600&auto=format&fit=crop" alt="Pants" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+              </div>
+              <div className="flex flex-col gap-2 flex-1">
+                <h3 className="font-serif text-xl tracking-[0.02em]">Executive Cotton-Silk</h3>
+                <span className="font-sans text-sm tracking-[0.1em] text-foreground/60">₦40,000</span>
+                <button className="self-start mt-2 bg-transparent text-foreground border border-foreground font-sans text-[0.65rem] uppercase tracking-[0.2em] px-6 py-2 hover:bg-foreground hover:text-background transition-all duration-[700ms]">Add to Bag</button>
+              </div>
+            </motion.div>
+          </div>
+        </section>
       </main>
 
       {/* Quick View Modal */}
       {quickViewProduct && (
-        <div className="modal-backdrop" onClick={() => setQuickViewProduct(null)}>
-          <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close-btn" onClick={() => setQuickViewProduct(null)}>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-foreground/30 backdrop-blur-sm p-4" onClick={() => setQuickViewProduct(null)}>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full max-w-5xl bg-background border border-foreground/10 overflow-hidden flex flex-col md:flex-row max-h-[90vh] md:max-h-none overflow-y-auto" 
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center bg-background/50 backdrop-blur-md text-foreground font-sans text-xl border border-foreground/10 hover:bg-foreground hover:text-background transition-colors duration-300" onClick={() => setQuickViewProduct(null)}>
               ✕
             </button>
-            <div className="modal-grid">
-              <div className="modal-image-col">
+            <div className="flex w-full flex-col md:flex-row">
+              <div className="w-full md:w-1/2 relative bg-foreground/5 p-4 md:p-8 flex flex-col items-center justify-center">
                 <img
                   src={quickViewActiveImg || quickViewProduct.image}
                   onError={(e) => {
                     e.target.src = quickViewProduct.fallbackImage;
                   }}
                   alt={quickViewProduct.title}
+                  className="w-full max-w-sm h-auto object-cover"
                 />
                 {quickViewProduct.gallery && (
-                  <div className="modal-gallery-thumbs" style={{ display: 'flex', gap: '8px', marginTop: '12px', justifyContent: 'center' }}>
+                  <div className="flex gap-2 mt-8 justify-center">
                     {quickViewProduct.gallery.map((imgUrl, idx) => {
                       const isCurrent = (quickViewActiveImg || quickViewProduct.image) === imgUrl;
                       return (
@@ -750,15 +734,7 @@ function App() {
                           key={idx}
                           src={imgUrl}
                           alt={`Angle ${idx + 1}`}
-                          style={{
-                            width: '54px',
-                            height: '54px',
-                            objectFit: 'cover',
-                            borderRadius: '8px',
-                            cursor: 'pointer',
-                            border: isCurrent ? '2px solid var(--gold-primary)' : '1px solid var(--surface-border)',
-                            opacity: isCurrent ? 1 : 0.6,
-                          }}
+                          className={`w-14 h-14 object-cover cursor-pointer transition-all ${isCurrent ? 'border border-foreground opacity-100' : 'border border-foreground/20 opacity-60 hover:opacity-100'}`}
                           onClick={() => setQuickViewActiveImg(imgUrl)}
                         />
                       );
@@ -767,40 +743,39 @@ function App() {
                 )}
               </div>
 
-              <div className="modal-details-col">
-                <div>
-                  <span className="badge-tag">{quickViewProduct.category} Collection</span>
-                  <h2 style={{ fontFamily: 'var(--font-serif)', marginTop: '8px', fontSize: '1.5rem' }}>
+              <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col overflow-y-auto">
+                <div className="flex-1">
+                  <span className="bg-foreground text-background font-sans text-[0.65rem] uppercase tracking-[0.2em] font-semibold px-2 py-0.5 inline-block mb-4">{quickViewProduct.category} Collection</span>
+                  <h2 className="font-serif text-3xl md:text-4xl tracking-[-0.02em] font-bold mb-2">
                     {quickViewProduct.title}
                   </h2>
-                  <div className="modal-price">{formatPrice(quickViewProduct.price)}</div>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: '1.6' }}>
+                  <div className="font-sans text-lg text-foreground/80 mb-6">{formatPrice(quickViewProduct.price)}</div>
+                  <p className="font-sans text-sm text-foreground/70 leading-relaxed mb-8">
                     {quickViewProduct.description}
                   </p>
 
-                  <div className="specs-list">
-                    <div className="specs-item">
-                      <span>✓ Weight:</span> {quickViewProduct.gsm}
+                  <div className="flex flex-col gap-3 font-sans text-xs tracking-[0.05em] text-foreground/80 mb-8 border-y border-foreground/10 py-6">
+                    <div>
+                      <span className="font-bold mr-2 uppercase tracking-[0.1em]">Weight:</span> {quickViewProduct.gsm}
                     </div>
-                    <div className="specs-item">
-                      <span>✓ Material:</span> {quickViewProduct.material}
+                    <div>
+                      <span className="font-bold mr-2 uppercase tracking-[0.1em]">Material:</span> {quickViewProduct.material}
                     </div>
-                    <div className="specs-item">
-                      <span>✓ Silhouette:</span> {quickViewProduct.fit}
+                    <div>
+                      <span className="font-bold mr-2 uppercase tracking-[0.1em]">Silhouette:</span> {quickViewProduct.fit}
                     </div>
                   </div>
 
                   {/* Size Selector */}
-                  <div style={{ margin: '18px 0' }}>
-                    <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, marginBottom: '8px', color: 'var(--text-muted)' }}>
+                  <div className="mb-8">
+                    <label className="block font-sans text-xs font-bold uppercase tracking-[0.2em] text-foreground/60 mb-3">
                       SELECT SIZE:
                     </label>
-                    <div className="size-pills">
+                    <div className="flex gap-2 flex-wrap">
                       {quickViewProduct.sizes.map((s) => (
                         <button
                           key={s}
-                          className={`size-pill ${quickViewSize === s ? 'active' : ''}`}
-                          style={{ width: '38px', height: '38px', fontSize: '0.85rem' }}
+                          className={`w-12 h-12 flex items-center justify-center border font-sans text-sm transition-all ${quickViewSize === s ? 'bg-foreground text-background border-foreground' : 'bg-transparent text-foreground border-foreground/20 hover:border-foreground'}`}
                           onClick={() => setQuickViewSize(s)}
                         >
                           {s}
@@ -811,8 +786,7 @@ function App() {
                 </div>
 
                 <button
-                  className="btn-primary"
-                  style={{ width: '100%', marginTop: '16px' }}
+                  className="w-full bg-foreground text-background font-sans text-xs uppercase tracking-[0.2em] py-4 border border-foreground hover:bg-transparent hover:text-foreground transition-all duration-[700ms]"
                   onClick={() => {
                     handleAddToCart(quickViewProduct, quickViewSize, quickViewColor);
                     setQuickViewProduct(null);
@@ -822,114 +796,129 @@ function App() {
                 </button>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* Size Guide Modal */}
       {isSizeGuideOpen && (
-        <div className="modal-backdrop" onClick={() => setIsSizeGuideOpen(false)}>
-          <div className="modal-dialog" style={{ maxWidth: '640px', padding: '36px' }} onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close-btn" onClick={() => setIsSizeGuideOpen(false)}>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-foreground/30 backdrop-blur-sm p-4" onClick={() => setIsSizeGuideOpen(false)}>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full max-w-2xl bg-background border border-foreground/10 p-8 md:p-12 overflow-y-auto max-h-[90vh]" 
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center text-foreground font-sans text-xl hover:opacity-50 transition-opacity" onClick={() => setIsSizeGuideOpen(false)}>
               ✕
             </button>
-            <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.8rem', marginBottom: '8px' }}>
+            <h2 className="font-serif text-3xl font-bold tracking-[-0.02em] mb-3">
               Klassic Size Architecture
             </h2>
-            <p style={{ color: 'var(--text-muted)', marginBottom: '24px', fontSize: '0.9rem' }}>
+            <p className="font-sans text-sm text-foreground/70 leading-relaxed mb-8">
               Our t-shirts are tailored with an intentional oversized dropped-shoulder silhouette. Choose your exact size for a relaxed streetwear drape, or size down for a slim fit.
             </p>
 
-            <table style={{ width: '100%', borderCollapse: 'collapse', color: 'var(--text-main)', fontSize: '0.9rem' }}>
+            <table className="w-full text-left font-sans text-sm border-collapse">
               <thead>
-                <tr style={{ borderBottom: '1px solid var(--surface-border-strong)', color: 'var(--text-gold)', textAlign: 'left' }}>
-                  <th style={{ padding: '12px' }}>Size</th>
-                  <th style={{ padding: '12px' }}>Chest (Inches)</th>
-                  <th style={{ padding: '12px' }}>Length (Inches)</th>
-                  <th style={{ padding: '12px' }}>Shoulder Drop</th>
+                <tr className="border-b border-foreground/20 text-foreground/60 uppercase tracking-[0.1em] text-xs">
+                  <th className="py-4 font-semibold">Size</th>
+                  <th className="py-4 font-semibold">Chest (Inches)</th>
+                  <th className="py-4 font-semibold">Length (Inches)</th>
+                  <th className="py-4 font-semibold">Shoulder Drop</th>
                 </tr>
               </thead>
-              <tbody>
-                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                  <td style={{ padding: '12px', fontWeight: 800 }}>S</td>
-                  <td style={{ padding: '12px' }}>40" - 42"</td>
-                  <td style={{ padding: '12px' }}>28.5"</td>
-                  <td style={{ padding: '12px' }}>2.0" Drop</td>
+              <tbody className="divide-y divide-foreground/10 text-foreground/80">
+                <tr className="hover:bg-foreground/5 transition-colors">
+                  <td className="py-4 font-bold text-foreground">S</td>
+                  <td className="py-4">40" - 42"</td>
+                  <td className="py-4">28.5"</td>
+                  <td className="py-4">2.0" Drop</td>
                 </tr>
-                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                  <td style={{ padding: '12px', fontWeight: 800 }}>M</td>
-                  <td style={{ padding: '12px' }}>43" - 45"</td>
-                  <td style={{ padding: '12px' }}>29.5"</td>
-                  <td style={{ padding: '12px' }}>2.2" Drop</td>
+                <tr className="hover:bg-foreground/5 transition-colors">
+                  <td className="py-4 font-bold text-foreground">M</td>
+                  <td className="py-4">43" - 45"</td>
+                  <td className="py-4">29.5"</td>
+                  <td className="py-4">2.2" Drop</td>
                 </tr>
-                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                  <td style={{ padding: '12px', fontWeight: 800 }}>L</td>
-                  <td style={{ padding: '12px' }}>46" - 48"</td>
-                  <td style={{ padding: '12px' }}>30.5"</td>
-                  <td style={{ padding: '12px' }}>2.5" Drop</td>
+                <tr className="hover:bg-foreground/5 transition-colors">
+                  <td className="py-4 font-bold text-foreground">L</td>
+                  <td className="py-4">46" - 48"</td>
+                  <td className="py-4">30.5"</td>
+                  <td className="py-4">2.5" Drop</td>
                 </tr>
-                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-                  <td style={{ padding: '12px', fontWeight: 800 }}>XL</td>
-                  <td style={{ padding: '12px' }}>49" - 51"</td>
-                  <td style={{ padding: '12px' }}>31.5"</td>
-                  <td style={{ padding: '12px' }}>2.8" Drop</td>
+                <tr className="hover:bg-foreground/5 transition-colors">
+                  <td className="py-4 font-bold text-foreground">XL</td>
+                  <td className="py-4">49" - 51"</td>
+                  <td className="py-4">31.5"</td>
+                  <td className="py-4">2.8" Drop</td>
                 </tr>
-                <tr>
-                  <td style={{ padding: '12px', fontWeight: 800 }}>XXL</td>
-                  <td style={{ padding: '12px' }}>52" - 54"</td>
-                  <td style={{ padding: '12px' }}>32.5"</td>
-                  <td style={{ padding: '12px' }}>3.0" Drop</td>
+                <tr className="hover:bg-foreground/5 transition-colors">
+                  <td className="py-4 font-bold text-foreground">XXL</td>
+                  <td className="py-4">52" - 54"</td>
+                  <td className="py-4">32.5"</td>
+                  <td className="py-4">3.0" Drop</td>
                 </tr>
               </tbody>
             </table>
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* Cart Drawer */}
+      {/* Cart Drawer */}
       {isCartOpen && (
-        <div className="cart-drawer-overlay" onClick={() => setIsCartOpen(false)}>
-          <div className="cart-drawer" onClick={(e) => e.stopPropagation()}>
-            <div className="drawer-header">
-              <h3>YOUR SHOPPING BAG ({cart.reduce((sum, item) => sum + item.quantity, 0)})</h3>
+        <div className="fixed inset-0 z-[100] flex justify-end bg-foreground/30 backdrop-blur-sm" onClick={() => setIsCartOpen(false)}>
+          <motion.div 
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full max-w-md bg-background border-l border-foreground/10 h-full flex flex-col shadow-2xl" 
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex justify-between items-center px-6 py-5 border-b border-foreground/10 bg-background z-10">
+              <h3 className="font-serif text-lg tracking-[-0.02em] font-semibold">YOUR SHOPPING BAG ({cart.reduce((sum, item) => sum + item.quantity, 0)})</h3>
               <button
-                style={{ background: 'none', border: 'none', color: 'var(--text-main)', fontSize: '1.2rem', cursor: 'pointer' }}
+                className="text-foreground hover:opacity-50 transition-opacity font-sans text-xl"
                 onClick={() => setIsCartOpen(false)}
               >
                 ✕
               </button>
             </div>
 
-            <div className="drawer-body">
+            <div className="flex-1 overflow-y-auto px-6 py-4 flex flex-col gap-6">
               {cart.length === 0 ? (
-                <div style={{ textAlignment: 'center', margin: 'auto 0' }}>
-                  <div style={{ fontSize: '3rem', marginBottom: '12px' }}>🛍️</div>
-                  <h4 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.2rem' }}>Your Bag is Currently Empty</h4>
-                  <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: '6px' }}>
+                <div className="flex flex-col items-center justify-center h-full text-center mt-20">
+                  <div className="text-5xl mb-4">🛍️</div>
+                  <h4 className="font-serif text-xl mb-2">Your Bag is Currently Empty</h4>
+                  <p className="font-sans text-sm text-foreground/60 leading-relaxed">
                     Add one of our ₦30,000, ₦35,000, or ₦40,000 heavyweight t-shirts to proceed.
                   </p>
                 </div>
               ) : (
                 cart.map((item, idx) => (
-                  <div key={`${item.id}-${item.size}-${item.color}`} className="cart-item">
-                    <div className="cart-item-img">
-                      <img src={item.image} alt={item.title} />
+                  <div key={`${item.id}-${item.size}-${item.color}`} className="flex gap-4 border-b border-foreground/5 pb-6">
+                    <div className="w-24 h-32 flex-shrink-0 bg-foreground/5">
+                      <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
                     </div>
-                    <div className="cart-item-details">
+                    <div className="flex flex-col justify-between flex-1">
                       <div>
-                        <div className="cart-item-title">{item.title}</div>
-                        <div className="cart-item-meta">
-                          Size: <strong>{item.size}</strong> | Color: {item.color}
+                        <div className="font-serif text-base font-semibold leading-tight mb-1">{item.title}</div>
+                        <div className="font-sans text-[0.7rem] uppercase tracking-[0.1em] text-foreground/60">
+                          Size: <strong className="text-foreground">{item.size}</strong> | Color: {item.color}
                         </div>
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                        <div className="cart-item-price">{formatPrice(item.price * item.quantity)}</div>
-                        <div className="cart-qty-controls">
-                          <button className="qty-btn" onClick={() => updateCartQty(idx, -1)}>
+                      <div className="flex items-end justify-between mt-4">
+                        <div className="font-sans text-sm font-medium">{formatPrice(item.price * item.quantity)}</div>
+                        <div className="flex items-center gap-3 border border-foreground/20 px-2 py-1">
+                          <button className="text-foreground/50 hover:text-foreground transition-colors px-1" onClick={() => updateCartQty(idx, -1)}>
                             -
                           </button>
-                          <span style={{ fontSize: '0.85rem', fontWeight: 800 }}>{item.quantity}</span>
-                          <button className="qty-btn" onClick={() => updateCartQty(idx, 1)}>
+                          <span className="font-sans text-xs font-bold w-4 text-center">{item.quantity}</span>
+                          <button className="text-foreground/50 hover:text-foreground transition-colors px-1" onClick={() => updateCartQty(idx, 1)}>
                             +
                           </button>
                         </div>
@@ -941,76 +930,84 @@ function App() {
             </div>
 
             {cart.length > 0 && (
-              <div className="drawer-footer">
-                <div className="free-shipping-progress">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.82rem' }}>
+              <div className="px-6 py-6 border-t border-foreground/10 bg-background/90 backdrop-blur-md">
+                <div className="mb-6">
+                  <div className="flex justify-between font-sans text-[0.7rem] uppercase tracking-[0.1em] font-semibold mb-2">
                     <span>
                       {cartSubtotal >= 70000
                         ? '🎉 You unlocked Free Express Delivery!'
                         : `Add ${formatPrice(70000 - cartSubtotal)} more for Free Express Delivery`}
                     </span>
                   </div>
-                  <div className="progress-bar-bg">
+                  <div className="h-1 bg-foreground/10 w-full overflow-hidden">
                     <div
-                      className="progress-bar-fill"
+                      className="h-full bg-foreground transition-all duration-500"
                       style={{ width: `${Math.min(100, (cartSubtotal / 70000) * 100)}%` }}
                     />
                   </div>
                 </div>
 
-                <div className="summary-row">
-                  <span>Subtotal</span>
-                  <span>{formatPrice(cartSubtotal)}</span>
-                </div>
-                <div className="summary-row">
-                  <span>Estimated Shipping</span>
-                  <span>{cartSubtotal >= 70000 ? 'FREE' : '₦2,500'}</span>
-                </div>
-                <div className="summary-row summary-total">
-                  <span>Total Due</span>
-                  <span>{formatPrice(cartSubtotal + (cartSubtotal >= 70000 ? 0 : 2500))}</span>
+                <div className="flex flex-col gap-2 mb-6 font-sans text-sm">
+                  <div className="flex justify-between text-foreground/70">
+                    <span>Subtotal</span>
+                    <span>{formatPrice(cartSubtotal)}</span>
+                  </div>
+                  <div className="flex justify-between text-foreground/70">
+                    <span>Estimated Shipping</span>
+                    <span>{cartSubtotal >= 70000 ? 'FREE' : '₦2,500'}</span>
+                  </div>
+                  <div className="flex justify-between font-bold text-base mt-2 pt-2 border-t border-foreground/10">
+                    <span>Total Due</span>
+                    <span>{formatPrice(cartSubtotal + (cartSubtotal >= 70000 ? 0 : 2500))}</span>
+                  </div>
                 </div>
 
                 <button
-                  className="btn-primary"
-                  style={{ width: '100%', marginTop: '16px' }}
+                  className="w-full bg-foreground text-background font-sans text-xs uppercase tracking-[0.2em] py-4 border border-foreground hover:bg-transparent hover:text-foreground transition-all duration-[700ms]"
                   onClick={() => {
                     setIsCartOpen(false);
                     setIsCheckoutOpen(true);
                     setCheckoutStep('FORM');
                   }}
                 >
-                  Proceed to Checkout — {formatPrice(cartSubtotal + (cartSubtotal >= 70000 ? 0 : 2500))}
+                  Proceed to Checkout
                 </button>
               </div>
             )}
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* Checkout Modal */}
       {isCheckoutOpen && (
-        <div className="modal-backdrop" onClick={() => setIsCheckoutOpen(false)}>
-          <div className="modal-dialog" style={{ maxWidth: '600px', padding: '36px' }} onClick={(e) => e.stopPropagation()}>
-            <button className="modal-close-btn" onClick={() => setIsCheckoutOpen(false)}>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-foreground/30 backdrop-blur-sm p-4" onClick={() => setIsCheckoutOpen(false)}>
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            className="relative w-full max-w-2xl bg-background border border-foreground/10 p-8 md:p-12 overflow-y-auto max-h-[90vh]" 
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button className="absolute top-4 right-4 z-10 w-10 h-10 flex items-center justify-center text-foreground font-sans text-xl hover:opacity-50 transition-opacity" onClick={() => setIsCheckoutOpen(false)}>
               ✕
             </button>
 
             {checkoutStep === 'FORM' ? (
               <>
-                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.8rem', marginBottom: '6px' }}>
+                <h2 className="font-serif text-3xl font-bold tracking-[-0.02em] mb-2">
                   Klassic Order Checkout
                 </h2>
-                <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '20px' }}>
+                <p className="font-sans text-sm text-foreground/70 mb-8">
                   Enter your shipping address in Nigeria for express dispatch.
                 </p>
 
-                <form className="checkout-form" onSubmit={handleCheckoutSubmit}>
-                  <div className="form-group">
-                    <label>Full Name</label>
+                <form className="flex flex-col gap-6" onSubmit={handleCheckoutSubmit}>
+                  <div className="flex flex-col gap-2">
+                    <label className="font-sans text-xs uppercase tracking-[0.1em] font-semibold text-foreground/60">Full Name</label>
                     <input
                       type="text"
-                      className="form-input"
+                      className="w-full bg-foreground/5 border border-foreground/20 text-foreground font-sans px-4 py-3 focus:outline-none focus:border-foreground transition-colors"
                       required
                       placeholder="e.g. Babatunde Ogunlesi"
                       value={customerForm.name}
@@ -1018,23 +1015,23 @@ function App() {
                     />
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                    <div className="form-group">
-                      <label>Email Address</label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex flex-col gap-2">
+                      <label className="font-sans text-xs uppercase tracking-[0.1em] font-semibold text-foreground/60">Email Address</label>
                       <input
                         type="email"
-                        className="form-input"
+                        className="w-full bg-foreground/5 border border-foreground/20 text-foreground font-sans px-4 py-3 focus:outline-none focus:border-foreground transition-colors"
                         required
                         placeholder="yourname@gmail.com"
                         value={customerForm.email}
                         onChange={(e) => setCustomerForm({ ...customerForm, email: e.target.value })}
                       />
                     </div>
-                    <div className="form-group">
-                      <label>Phone / WhatsApp</label>
+                    <div className="flex flex-col gap-2">
+                      <label className="font-sans text-xs uppercase tracking-[0.1em] font-semibold text-foreground/60">Phone / WhatsApp</label>
                       <input
                         type="tel"
-                        className="form-input"
+                        className="w-full bg-foreground/5 border border-foreground/20 text-foreground font-sans px-4 py-3 focus:outline-none focus:border-foreground transition-colors"
                         required
                         placeholder="+234 800 000 0000"
                         value={customerForm.phone}
@@ -1043,11 +1040,11 @@ function App() {
                     </div>
                   </div>
 
-                  <div className="form-group">
-                    <label>Delivery Address</label>
+                  <div className="flex flex-col gap-2">
+                    <label className="font-sans text-xs uppercase tracking-[0.1em] font-semibold text-foreground/60">Delivery Address</label>
                     <input
                       type="text"
-                      className="form-input"
+                      className="w-full bg-foreground/5 border border-foreground/20 text-foreground font-sans px-4 py-3 focus:outline-none focus:border-foreground transition-colors"
                       required
                       placeholder="Street address, apartment or suite"
                       value={customerForm.address}
@@ -1055,11 +1052,11 @@ function App() {
                     />
                   </div>
 
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                    <div className="form-group">
-                      <label>City / State</label>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="flex flex-col gap-2">
+                      <label className="font-sans text-xs uppercase tracking-[0.1em] font-semibold text-foreground/60">City / State</label>
                       <select
-                        className="form-input"
+                        className="w-full bg-foreground/5 border border-foreground/20 text-foreground font-sans px-4 py-3 focus:outline-none focus:border-foreground transition-colors appearance-none"
                         value={customerForm.city}
                         onChange={(e) => setCustomerForm({ ...customerForm, city: e.target.value })}
                       >
@@ -1071,10 +1068,10 @@ function App() {
                       </select>
                     </div>
 
-                    <div className="form-group">
-                      <label>Payment Method</label>
+                    <div className="flex flex-col gap-2">
+                      <label className="font-sans text-xs uppercase tracking-[0.1em] font-semibold text-foreground/60">Payment Method</label>
                       <select
-                        className="form-input"
+                        className="w-full bg-foreground/5 border border-foreground/20 text-foreground font-sans px-4 py-3 focus:outline-none focus:border-foreground transition-colors appearance-none"
                         value={customerForm.paymentMethod}
                         onChange={(e) => setCustomerForm({ ...customerForm, paymentMethod: e.target.value })}
                       >
@@ -1085,51 +1082,41 @@ function App() {
                     </div>
                   </div>
 
-                  <button className="btn-primary" style={{ width: '100%', marginTop: '20px' }} type="submit">
+                  <button className="w-full bg-foreground text-background font-sans text-xs uppercase tracking-[0.2em] py-4 mt-4 border border-foreground hover:bg-transparent hover:text-foreground transition-all duration-[700ms]" type="submit">
                     Confirm & Place Order ({formatPrice(cartSubtotal + (cartSubtotal >= 70000 ? 0 : 2500))})
                   </button>
                 </form>
               </>
             ) : (
-              <div style={{ textAlign: 'center', padding: '20px 0' }}>
-                <div style={{ fontSize: '3.5rem', marginBottom: '16px' }}>🎉</div>
-                <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: '2rem', color: 'var(--text-gold)' }}>
+              <div className="text-center py-8">
+                <div className="text-6xl mb-6">🎉</div>
+                <h2 className="font-serif text-3xl font-bold mb-4">
                   Order Confirmed!
                 </h2>
-                <p style={{ color: 'var(--text-muted)', margin: '12px 0 24px', lineHeight: '1.6' }}>
-                  Thank you, <strong>{customerForm.name}</strong>! Your order for Klassic Wardrobe t-shirts has been successfully logged. We will contact you at <strong>{customerForm.phone}</strong> for dispatch confirmation.
+                <p className="font-sans text-sm text-foreground/70 leading-relaxed mb-8">
+                  Thank you, <strong className="text-foreground">{customerForm.name}</strong>! Your order for Klassic Wardrobe t-shirts has been successfully logged. We will contact you at <strong className="text-foreground">{customerForm.phone}</strong> for dispatch confirmation.
                 </p>
 
-                <div
-                  style={{
-                    background: 'rgba(255,255,255,0.04)',
-                    border: '1px solid var(--surface-border)',
-                    padding: '20px',
-                    borderRadius: 'var(--radius-md)',
-                    textAlign: 'left',
-                    marginBottom: '24px',
-                    fontSize: '0.88rem',
-                  }}
-                >
-                  <div style={{ color: 'var(--text-gold)', fontWeight: 800, marginBottom: '8px' }}>
+                <div className="bg-foreground/5 border border-foreground/10 p-6 text-left mb-8 font-sans text-sm">
+                  <div className="font-bold text-xs uppercase tracking-[0.1em] mb-4">
                     ORDER RECEIPT SUMMARY:
                   </div>
                   {cart.map((i) => (
-                    <div key={`${i.id}-${i.size}`} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                    <div key={`${i.id}-${i.size}`} className="flex justify-between mb-2">
                       <span>
                         {i.quantity}x {i.title} ({i.size})
                       </span>
                       <span>{formatPrice(i.price * i.quantity)}</span>
                     </div>
                   ))}
-                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: '8px', paddingTop: '8px', display: 'flex', justifyContent: 'space-between', fontWeight: 800 }}>
+                  <div className="border-t border-foreground/10 mt-4 pt-4 flex justify-between font-bold">
                     <span>Total Amount</span>
                     <span>{formatPrice(cartSubtotal + (cartSubtotal >= 70000 ? 0 : 2500))}</span>
                   </div>
                 </div>
 
                 <button
-                  className="btn-primary"
+                  className="w-full bg-foreground text-background font-sans text-xs uppercase tracking-[0.2em] py-4 border border-foreground hover:bg-transparent hover:text-foreground transition-all duration-[700ms]"
                   onClick={() => {
                     setCart([]);
                     setIsCheckoutOpen(false);
@@ -1139,51 +1126,51 @@ function App() {
                 </button>
               </div>
             )}
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* Footer */}
-      <footer className="site-footer">
-        <div className="footer-inner">
-          <div>
-            <a href="#home" className="brand-logo" style={{ marginBottom: '16px', display: 'inline-block' }} aria-label="Klasik Wardrobe Home">
-              <KlasikLogo height={50} className="footer-logo gold-version" fill="#f3c649" />
+      <footer className="w-full bg-foreground text-background pt-24 pb-8 px-6 md:px-12 mt-20">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+          <div className="md:col-span-1">
+            <a href="#home" className="inline-block mb-6 hover:opacity-70 transition-opacity" aria-label="Klasik Wardrobe Home">
+              <KlasikLogo height={50} className="w-auto" fill="#F9F8F6" />
             </a>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', maxWidth: '320px', lineHeight: '1.6' }}>
+            <p className="font-sans text-sm text-background/60 leading-relaxed">
               Luxury streetwear & heavyweight t-shirts engineered with organic cotton and mulberry silk. Transparent pricing at ₦30,000, ₦35,000, and ₦40,000.
             </p>
           </div>
 
-          <div className="footer-col">
-            <h4>Collections</h4>
-            <div className="footer-links">
-              <a href="#catalog" onClick={() => setSelectedPrice('30000')}>Essential (₦30,000)</a>
-              <a href="#catalog" onClick={() => setSelectedPrice('35000')}>Signature (₦35,000)</a>
-              <a href="#catalog" onClick={() => setSelectedPrice('40000')}>Executive (₦40,000)</a>
+          <div className="flex flex-col gap-6">
+            <h4 className="font-serif text-lg tracking-[-0.02em] font-semibold">Collections</h4>
+            <div className="flex flex-col gap-3 font-sans text-sm text-background/60">
+              <a href="#catalog" className="hover:text-background transition-colors" onClick={() => setSelectedPrice('30000')}>Essential (₦30,000)</a>
+              <a href="#catalog" className="hover:text-background transition-colors" onClick={() => setSelectedPrice('35000')}>Signature (₦35,000)</a>
+              <a href="#catalog" className="hover:text-background transition-colors" onClick={() => setSelectedPrice('40000')}>Executive (₦40,000)</a>
             </div>
           </div>
 
-          <div className="footer-col">
-            <h4>Customer Care</h4>
-            <div className="footer-links">
-              <a href="#" onClick={(e) => { e.preventDefault(); setIsSizeGuideOpen(true); }}>Size Architecture Chart</a>
-              <a href="#">Express Delivery Policy</a>
-              <a href="#">Return & Exchange Policy</a>
+          <div className="flex flex-col gap-6">
+            <h4 className="font-serif text-lg tracking-[-0.02em] font-semibold">Customer Care</h4>
+            <div className="flex flex-col gap-3 font-sans text-sm text-background/60">
+              <a href="#" className="hover:text-background transition-colors" onClick={(e) => { e.preventDefault(); setIsSizeGuideOpen(true); }}>Size Architecture Chart</a>
+              <a href="#" className="hover:text-background transition-colors">Express Delivery Policy</a>
+              <a href="#" className="hover:text-background transition-colors">Return & Exchange Policy</a>
             </div>
           </div>
 
-          <div className="footer-col">
-            <h4>HQs & Contact</h4>
-            <div className="footer-links">
+          <div className="flex flex-col gap-6">
+            <h4 className="font-serif text-lg tracking-[-0.02em] font-semibold">HQs & Contact</h4>
+            <div className="flex flex-col gap-3 font-sans text-sm text-background/60">
               <span>Victoria Island, Lagos</span>
-              <a href="mailto:concierge@klassicwardrobe.com">concierge@klassicwardrobe.com</a>
-              <a href="https://wa.me/2348000000000" target="_blank" rel="noreferrer">WhatsApp Concierge</a>
+              <a href="mailto:concierge@klassicwardrobe.com" className="hover:text-background transition-colors">concierge@klassicwardrobe.com</a>
+              <a href="https://wa.me/2348000000000" target="_blank" rel="noreferrer" className="hover:text-background transition-colors">WhatsApp Concierge</a>
             </div>
           </div>
         </div>
 
-        <div className="footer-bottom">
+        <div className="max-w-7xl mx-auto border-t border-background/20 pt-8 text-center font-sans text-xs text-background/40 tracking-[0.1em] uppercase">
           © {new Date().getFullYear()} Klassic Wardrobe Nigeria. All rights reserved. Built with precision.
         </div>
       </footer>
