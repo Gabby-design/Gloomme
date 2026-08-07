@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import godsPlanVideo from '../assets/gods-plan.webm';
 
 export function Hero() {
   const { scrollY } = useScroll();
@@ -9,6 +10,7 @@ export function Hero() {
   return (
     <section className="relative w-full h-[90vh] overflow-hidden">
       <motion.video
+        src={godsPlanVideo}
         style={{ scale: heroScale }}
         className="absolute inset-0 w-full h-full object-cover"
         autoPlay
@@ -16,9 +18,7 @@ export function Hero() {
         muted
         playsInline
         poster="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=2000&auto=format&fit=crop"
-      >
-        <source src="https://assets.mixkit.co/videos/preview/mixkit-fashion-model-walking-in-a-red-dress-41619-large.mp4" type="video/mp4" />
-      </motion.video>
+      />
 
       {/* Rotating 4-Point Star */}
       <motion.div
