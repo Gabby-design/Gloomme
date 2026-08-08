@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '../../utils/supabase/server'
 
 export default async function AdminLayout({ children }) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: { user }, error } = await supabase.auth.getUser()
 
