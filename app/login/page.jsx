@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, Suspense, useEffect } from 'react'
-import { useFormState, useFormStatus } from 'react-dom'
+import { useState, Suspense, useEffect, useActionState } from 'react'
+import { useFormStatus } from 'react-dom'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { loginAction, signUpAction } from '../actions/auth'
 
@@ -32,7 +32,7 @@ function AuthForm() {
     return result
   }
 
-  const [state, formAction] = useFormState(handleAuth, { error: null, success: null })
+  const [state, formAction] = useActionState(handleAuth, { error: null, success: null })
 
   // Handle successful login redirect outside of the server action
   useEffect(() => {
