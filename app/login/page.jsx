@@ -1,13 +1,43 @@
 'use client'
 
 import { useState, Suspense } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { login, signup } from './actions'
 
 function AuthForm() {
   const searchParams = useSearchParams()
-  const message = searchParams.get('message')
+  const router = useRouter()
+  const urlMessage = searchParams.get('message')
+  const [message, setMessage] = useState(urlMessage)
   const [isLogin, setIsLogin] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setIsLoading(true)
+    setMessage(null)
+
+    const formData = new FormData(e.currentTarget)
+    const action = isLogin ? login : signup
+    
+    try {
+      const result = await action(formData)
+      
+      if (result?.error) {
+        setMessage(result.error)
+      } else if (result?.success) {
+        if (isLogin) {
+          router.push('/')
+        } else {
+          setMessage(result.success)
+        }
+      }
+    } catch (err) {
+      setMessage('An unexpected error occurred.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <div className="w-full max-w-md bg-white p-8 border border-neutral-200">
@@ -21,7 +51,7 @@ function AuthForm() {
         </div>
       )}
 
-      <form className="flex flex-col gap-4">
+      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-2">
           <label className="text-sm font-semibold text-[#1a1a1a] font-['DM_Sans']">
             Email
@@ -48,10 +78,11 @@ function AuthForm() {
         </div>
         
         <button
-          formAction={isLogin ? login : signup}
-          className="mt-4 bg-[#1a1a1a] text-[#f8f8f8] font-bold font-['DM_Sans'] uppercase tracking-wider py-4 hover:bg-neutral-800 transition-colors border border-transparent"
+          type="submit"
+          disabled={isLoading}
+          className="mt-4 bg-[#1a1a1a] text-[#f8f8f8] font-bold font-['DM_Sans'] uppercase tracking-wider py-4 hover:bg-neutral-800 transition-colors border border-transparent disabled:opacity-50"
         >
-          {isLogin ? 'Log In' : 'Sign Up'}
+          {isLoading ? 'Processing...' : (isLogin ? 'Log In' : 'Sign Up')}
         </button>
       </form>
 
