@@ -25,7 +25,7 @@ export default async function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-[#f8f8f8] flex flex-col text-[#1a1a1a]">
-      <Navbar searchQuery="" setSearchQuery={() => {}} setIsSizeGuideOpen={() => {}} />
+      <Navbar />
 
       <main className="flex-1 max-w-7xl mx-auto w-full px-6 pt-32 pb-16">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-12 gap-6">

@@ -7,7 +7,7 @@ export const metadata = {
 export default function RefundPolicyPage() {
   return (
     <div className="min-h-screen bg-[#f8f8f8] flex flex-col text-[#1a1a1a]">
-      <Navbar searchQuery="" setSearchQuery={() => {}} setIsSizeGuideOpen={() => {}} />
+      <Navbar />
 
       <main className="flex-1 max-w-4xl mx-auto w-full px-6 pt-32 pb-16">
         <h1 className="font-['Syne'] text-4xl font-bold mb-8">Return & Exchange Policy</h1>

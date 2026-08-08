@@ -1,3 +1,4 @@
+"use client";
 import Link from 'next/link';
 import { KlasikLogo } from './KlasikLogo';
 import { useCartStore } from '../store/cartStore';
@@ -26,8 +27,8 @@ export function Navbar({ searchQuery, setSearchQuery, setIsSizeGuideOpen }) {
               type="text"
               className="bg-transparent border-none outline-none text-sm w-full font-sans"
               placeholder="Search t-shirts, fabrics..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              value={searchQuery || ''}
+              onChange={(e) => setSearchQuery && setSearchQuery(e.target.value)}
             />
           </div>
 
@@ -36,7 +37,7 @@ export function Navbar({ searchQuery, setSearchQuery, setIsSizeGuideOpen }) {
             <Link href="/catalog" className="text-xs uppercase tracking-[0.15em] font-medium hover:opacity-70 transition-opacity">
               Catalog
             </Link>
-            <button className="text-xs uppercase tracking-[0.15em] font-medium hover:opacity-70 transition-opacity" onClick={() => setIsSizeGuideOpen(true)}>
+            <button className="text-xs uppercase tracking-[0.15em] font-medium hover:opacity-70 transition-opacity" onClick={() => setIsSizeGuideOpen && setIsSizeGuideOpen(true)}>
               Size Guide
             </button>
             <button className="flex items-center gap-2 text-xs uppercase tracking-[0.15em] font-medium hover:opacity-70 transition-opacity" onClick={() => setIsCartOpen(true)}>

@@ -29,7 +29,7 @@ export default async function ProductPage({ params }) {
 
   return (
     <div className="min-h-screen bg-[#f8f8f8] flex flex-col">
-      <Navbar searchQuery="" setSearchQuery={() => {}} setIsSizeGuideOpen={() => {}} />
+      <Navbar />
       
       <main className="flex-1 max-w-7xl mx-auto w-full px-6 pt-32 pb-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-24">

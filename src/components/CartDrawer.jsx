@@ -1,3 +1,4 @@
+"use client";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from '../store/cartStore';
 import { checkoutAction } from '../../app/actions/stripe';
