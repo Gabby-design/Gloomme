@@ -1,18 +1,20 @@
+"use client";
+
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import './index.css';
-import { PRODUCTS } from './data/catalog';
-import { ShopTheLook } from './components/ShopTheLook';
-import { QuickViewModal } from './components/QuickViewModal';
-import { SizeGuideModal } from './components/SizeGuideModal';
-import { CartDrawer } from './components/CartDrawer';
-import { CheckoutModal } from './components/CheckoutModal';
+import toast from 'react-hot-toast';
+import { PRODUCTS } from '../src/data/catalog';
+import { ShopTheLook } from '../src/components/ShopTheLook';
+import { QuickViewModal } from '../src/components/QuickViewModal';
+import { SizeGuideModal } from '../src/components/SizeGuideModal';
+import { CartDrawer } from '../src/components/CartDrawer';
+import { CheckoutModal } from '../src/components/CheckoutModal';
 
-import { Navbar } from './components/Navbar';
-import { Hero } from './components/Hero';
-import { ProductGrid } from './components/ProductGrid';
-import { Footer } from './components/Footer';
-import { AvantGardeButton } from './components/Button';
+import { Navbar } from '../src/components/Navbar';
+import { Hero } from '../src/components/Hero';
+import { ProductGrid } from '../src/components/ProductGrid';
+import { Footer } from '../src/components/Footer';
+import { AvantGardeButton } from '../src/components/Button';
 
 
 function App() {
@@ -29,7 +31,6 @@ function App() {
   const [isSizeGuideOpen, setIsSizeGuideOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [checkoutStep, setCheckoutStep] = useState('FORM');
-  const [toasts, setToasts] = useState([]);
   const [selectedCardSizes, setSelectedCardSizes] = useState({});
   const [cardActiveImages, setCardActiveImages] = useState({});
   const [quickViewActiveImg, setQuickViewActiveImg] = useState(null);
@@ -57,15 +58,6 @@ function App() {
   // Format currency helper
   const formatPrice = (amount) => {
     return `₦${amount.toLocaleString()}`;
-  };
-
-  // Toast Trigger
-  const addToast = (msg) => {
-    const id = Date.now();
-    setToasts((prev) => [...prev, { id, msg }]);
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 3000);
   };
 
   // Add to cart helper
@@ -96,7 +88,7 @@ function App() {
       }
     });
 
-    addToast(`Added "${product.title}" (${size}) to your bag!`);
+    toast.success(`Added "${product.title}" (${size}) to your bag!`);
   };
 
   // Instant Buy Now handler
@@ -141,15 +133,6 @@ function App() {
 
   return (
     <div className="app-container">
-      {/* Toast Notification Container */}
-      <div className="toast-container">
-        {toasts.map((t) => (
-          <div key={t.id} className="toast">
-            <span>✨</span>
-            <div>{t.msg}</div>
-          </div>
-        ))}
-      </div>
 
       <Navbar 
         searchQuery={searchQuery}

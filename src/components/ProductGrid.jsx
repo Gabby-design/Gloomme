@@ -182,13 +182,27 @@ export function ProductGrid({
                   <div className="flex flex-col gap-2">
                     <AvantGardeButton
                       className="w-full"
-                      onClick={() => handleAddToCart(product, getSelectedSize(product.id))}
+                      onClick={() => {
+                        fetch('/api/order-alert', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ name: product.title, price: product.price })
+                        }).catch(console.error);
+                        handleAddToCart(product, getSelectedSize(product.id));
+                      }}
                     >
                       🛒 Add to Bag
                     </AvantGardeButton>
                     <AvantGardeButton
                       className="w-full"
-                      onClick={() => handleBuyNow(product)}
+                      onClick={() => {
+                        fetch('/api/order-alert', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ name: product.title, price: product.price })
+                        }).catch(console.error);
+                        handleBuyNow(product);
+                      }}
                     >
                       ⚡ Buy Now
                     </AvantGardeButton>

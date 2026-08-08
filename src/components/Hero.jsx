@@ -29,7 +29,8 @@ export function Hero() {
         style={{ perspective: '1200px' }}
       >
         <motion.img
-          src={heroTshirt}
+          src={heroTshirt.src}
+          alt="Klasik Heavyweight T-Shirt"
           style={{ 
             rotateY, 
             rotateX,
