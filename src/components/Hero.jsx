@@ -1,24 +1,46 @@
 import { useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import godsPlanVideo from '../assets/gods-plan.webm';
+import heroTshirt from '../assets/hero-tshirt-blank.png';
 
 export function Hero() {
-  const { scrollY } = useScroll();
-  const heroScale = useTransform(scrollY, [0, 800], [1, 1.2]);
+  const heroRef = useRef(null);
+  
+  const { scrollY, scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"]
+  });
+
+  // Scale mapping for the shirt, starting larger to feel closer
+  const heroScale = useTransform(scrollY, [0, 800], [1.2, 1.5]);
+  
+  // Parallax sway mapping based on section scroll progress
+  const rotateY = useTransform(scrollYProgress, [0, 1], [-20, 20]);
+  const rotateX = useTransform(scrollYProgress, [0, 1], [5, -5]);
+
+  // Keep existing star rotation mapping
   const starRotate = useTransform(scrollY, [0, 1000], [0, 360]);
 
   return (
-    <section className="relative w-full h-[90vh] overflow-hidden">
-      <motion.video
-        src={godsPlanVideo}
-        style={{ scale: heroScale }}
-        className="absolute inset-0 w-full h-full object-cover"
-        autoPlay
-        loop
-        muted
-        playsInline
-        poster="https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=2000&auto=format&fit=crop"
-      />
+    <section ref={heroRef} className="relative w-full h-[90vh] overflow-hidden bg-background flex items-center justify-center" style={{ isolation: 'isolate' }}>
+      
+      {/* 3D Perspective Wrapper for T-Shirt */}
+      <div 
+        className="relative w-full max-w-3xl aspect-square flex items-center justify-center z-10"
+        style={{ perspective: '1200px' }}
+      >
+        <motion.img
+          src={heroTshirt}
+          style={{ 
+            rotateY, 
+            rotateX,
+            scale: heroScale
+          }}
+          className="relative z-10 w-full h-full object-contain pointer-events-none mix-blend-multiply scale-110"
+        />
+        
+        {/* Static Ultra-Diffused Contact Shadow on the Ground */}
+        <div className="absolute bottom-[5%] left-1/2 -translate-x-1/2 w-3/5 h-16 bg-black/20 blur-3xl rounded-[100%] z-0 pointer-events-none" />
+      </div>
 
       {/* Rotating 4-Point Star */}
       <motion.div
@@ -29,7 +51,9 @@ export function Hero() {
           <path d="M50 0 C50 30 70 50 100 50 C70 50 50 70 50 100 C50 70 30 50 0 50 C30 50 50 30 50 0 Z" />
         </svg>
       </motion.div>
-      <div className="absolute bottom-12 left-6 md:bottom-20 md:left-20 z-50 text-left text-white mix-blend-difference max-w-2xl">
+
+      {/* Mix-Blend Text Overlay */}
+      <div className="absolute bottom-12 left-6 md:bottom-20 md:left-20 z-50 text-left text-white mix-blend-difference max-w-2xl pointer-events-none">
         <motion.h1
           initial={{ opacity: 0, y: 25 }}
           animate={{ opacity: 1, y: 0 }}
