@@ -1,22 +1,16 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import nodemailer from 'nodemailer';
-
-// Initialize Stripe with the secret key
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2024-06-20', // or whatever your current api version is
-});
-
-// Configure Nodemailer transporter
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+import { Resend } from 'resend';
 
 export async function POST(req) {
+  // Initialize Stripe with the secret key
+  const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+    apiVersion: '2024-06-20', // or whatever your current api version is
+  });
+
+  // Configure Resend
+  const resend = new Resend(process.env.RESEND_API_KEY || 're_123');
+
   const payload = await req.text();
   const signature = req.headers.get('stripe-signature');
 
@@ -54,41 +48,28 @@ export async function POST(req) {
       addressInfo.country
     ].filter(Boolean).join(', ');
 
-    // For line items (products), we'd typically need to fetch them from the session if they were expanded
-    // Or retrieve them via Stripe API using the session ID
-    // Since we're doing a simple summary, let's fetch the line items
     try {
       const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
       
       const productsSummary = lineItems.data.map(item => {
         return `- ${item.description} (Qty: ${item.quantity})`;
-      }).join('\n');
-
-      // Compose Email Body
-      const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: process.env.EMAIL_USER, // Sending to owner
-        subject: `[Klasik] New Order Received! (${currency} ${amountTotal})`,
-        text: `
-          New Order Alert!
-          
-          A customer just completed a checkout session.
-          
-          Customer Email: ${customerEmail}
-          Total Amount: ${currency} ${amountTotal}
-          
-          Products Ordered:
-          ${productsSummary || 'No line items found.'}
-          
-          Shipping Address:
-          ${shippingAddress || 'No address provided.'}
-          
-          Stripe Session ID: ${session.id}
-        `.trim().replace(/^ +/gm, ''), // Removes leading indentation
-      };
+      }).join('<br>');
 
       // Send the email
-      await transporter.sendMail(mailOptions);
+      await resend.emails.send({
+        from: 'onboarding@resend.dev',
+        to: 'gabrieltolulope50@gmail.com', // Sending to owner
+        subject: `[Klasik] New Order Received! (${currency} ${amountTotal})`,
+        html: `
+          <p><strong>New Order Alert!</strong></p>
+          <p>A customer just completed a checkout session.</p>
+          <p><strong>Customer Email:</strong> ${customerEmail}</p>
+          <p><strong>Total Amount:</strong> ${currency} ${amountTotal}</p>
+          <p><strong>Products Ordered:</strong><br>${productsSummary || 'No line items found.'}</p>
+          <p><strong>Shipping Address:</strong><br>${shippingAddress || 'No address provided.'}</p>
+          <p><strong>Stripe Session ID:</strong> ${session.id}</p>
+        `,
+      });
       console.log('Order notification email sent successfully!');
       
     } catch (emailError) {
