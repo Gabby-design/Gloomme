@@ -1,5 +1,6 @@
 import '../src/index.css';
 import { ToastProvider } from './ToastProvider';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata = {
   title: 'Klasik Wardrobe | Zero Flow',
@@ -20,6 +21,7 @@ export default function RootLayout({ children }) {
         <div id="root">
           {children}
         </div>
+        <Analytics />
       </body>
     </html>
   )
