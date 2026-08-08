@@ -34,10 +34,17 @@ function AuthForm() {
 
   const [state, formAction] = useActionState(handleAuth, { error: null, success: null })
 
-  // Handle successful login redirect outside of the server action
+  // Handle successful login/signup redirect outside of the server action
   useEffect(() => {
-    if (state?.success && isLogin) {
-      router.push('/')
+    if (state?.success) {
+      if (isLogin) {
+        router.push('/')
+      } else {
+        const timer = setTimeout(() => {
+          router.push('/')
+        }, 3000)
+        return () => clearTimeout(timer)
+      }
     }
   }, [state, isLogin, router])
 
