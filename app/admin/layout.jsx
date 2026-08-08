@@ -10,6 +10,10 @@ export default async function AdminLayout({ children }) {
     redirect('/login')
   }
 
+  if (user.email !== 'gabrieltolulope50@gmail.com') {
+    redirect('/')
+  }
+
   return (
     <div className="min-h-screen bg-[#f8f8f8] flex flex-col">
       <header className="bg-white border-b border-neutral-200 py-4 px-8 flex justify-between items-center">
