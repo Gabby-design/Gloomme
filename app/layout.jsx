@@ -1,5 +1,5 @@
 import '../src/index.css';
-import { Toaster } from 'react-hot-toast';
+import { ToastProvider } from './ToastProvider';
 
 export const metadata = {
   title: 'Klasik Wardrobe | Zero Flow',
@@ -16,25 +16,7 @@ export default function RootLayout({ children }) {
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Syne:wght@400..800&display=swap" rel="stylesheet" />
       </head>
       <body>
-        <Toaster 
-          position="bottom-center"
-          toastOptions={{
-            style: {
-              background: '#f8f8f8',
-              color: '#1a1a1a',
-              borderRadius: '0px',
-              border: '1px solid #e5e5e5',
-              padding: '16px',
-              fontFamily: 'DM Sans, sans-serif'
-            },
-            success: {
-              iconTheme: {
-                primary: '#1a1a1a',
-                secondary: '#f8f8f8',
-              },
-            },
-          }}
-        />
+        <ToastProvider />
         <div id="root">
           {children}
         </div>
