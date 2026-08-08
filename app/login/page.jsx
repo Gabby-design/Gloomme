@@ -1,8 +1,8 @@
 'use client'
 
-import { useState, Suspense } from 'react'
+import { useState, Suspense, useTransition } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
-import { login, signup } from './actions'
+import { loginAction, signUpAction } from '../actions/auth'
 
 function AuthForm() {
   const searchParams = useSearchParams()
@@ -10,33 +10,32 @@ function AuthForm() {
   const urlMessage = searchParams.get('message')
   const [message, setMessage] = useState(urlMessage)
   const [isLogin, setIsLogin] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isPending, startTransition] = useTransition()
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault()
-    setIsLoading(true)
     setMessage(null)
 
     const formData = new FormData(e.currentTarget)
-    const action = isLogin ? login : signup
+    const action = isLogin ? loginAction : signUpAction
     
-    try {
-      const result = await action(formData)
-      
-      if (result?.error) {
-        setMessage(result.error)
-      } else if (result?.success) {
-        if (isLogin) {
-          router.push('/')
-        } else {
-          setMessage(result.success)
+    startTransition(async () => {
+      try {
+        const result = await action(formData)
+        
+        if (result?.error) {
+          setMessage(result.error)
+        } else if (result?.success) {
+          if (isLogin) {
+            router.push('/')
+          } else {
+            setMessage(result.success)
+          }
         }
+      } catch (err) {
+        setMessage('An unexpected error occurred.')
       }
-    } catch (err) {
-      setMessage('An unexpected error occurred.')
-    } finally {
-      setIsLoading(false)
-    }
+    })
   }
 
   return (
@@ -79,10 +78,10 @@ function AuthForm() {
         
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={isPending}
           className="mt-4 bg-[#1a1a1a] text-[#f8f8f8] font-bold font-['DM_Sans'] uppercase tracking-wider py-4 hover:bg-neutral-800 transition-colors border border-transparent disabled:opacity-50"
         >
-          {isLoading ? 'Processing...' : (isLogin ? 'Log In' : 'Sign Up')}
+          {isPending ? 'Processing...' : (isLogin ? 'Log In' : 'Sign Up')}
         </button>
       </form>
 
