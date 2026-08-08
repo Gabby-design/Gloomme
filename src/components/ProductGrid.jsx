@@ -16,6 +16,8 @@ export function ProductGrid({
   setQuickViewColor,
   getSelectedSize,
   handleSelectCardSize,
+  getSelectedColor,
+  handleSelectCardColor,
   handleAddToCart,
   handleBuyNow
 }) {
@@ -59,11 +61,19 @@ export function ProductGrid({
       {/* Vertical Product Gallery */}
       <section className="relative bg-background px-6 max-w-[1400px] mx-auto pb-24">
         <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-16 gap-x-10"
+          variants={{
+            hidden: { opacity: 0 },
+            show: {
+              opacity: 1,
+              transition: {
+                staggerChildren: 0.1
+              }
+            }
+          }}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-50px" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-y-16 gap-x-10 items-stretch"
         >
           {filteredProducts.length === 0 ? (
             <div className="col-span-full text-center py-20 px-5">
@@ -84,11 +94,15 @@ export function ProductGrid({
             </div>
           ) : (
             filteredProducts.map((product) => (
-              <div
+              <motion.div
+                variants={{
+                  hidden: { opacity: 0, y: 30 },
+                  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
+                }}
                 key={product.id}
-                className="relative group flex flex-col w-full"
+                className="relative group flex flex-col w-full h-full"
               >
-                <div className="relative w-full overflow-hidden bg-transparent mb-4 shadow-premium-diffused h-[500px] md:h-[600px]">
+                <div className="relative w-full overflow-hidden bg-transparent mb-4 shadow-premium-diffused aspect-[3/4] shrink-0">
                   <motion.img
                     whileHover={{ scale: 1.04 }}
                     transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
@@ -139,12 +153,13 @@ export function ProductGrid({
                   </div>
                 </div>
 
-                <div className="pt-2">
-                  <div className="font-sans text-[0.65rem] uppercase tracking-[0.2em] text-foreground/60 mb-2">{product.category} Collection — {product.gsm}</div>
-                  <h3 className="font-serif text-lg tracking-[0.02em] font-medium leading-snug mb-1">{product.title}</h3>
-                  <p className="font-sans text-sm text-foreground/70 mb-4">{product.description}</p>
+                <div className="pt-2 flex flex-col flex-grow justify-between">
+                  <div>
+                    <div className="font-sans text-[0.65rem] uppercase tracking-[0.2em] text-foreground/60 mb-2">{product.category} Collection — {product.gsm}</div>
+                    <h3 className="font-serif text-lg tracking-[0.02em] font-medium leading-snug mb-1">{product.title}</h3>
+                    <p className="font-sans text-sm text-foreground/70 mb-4">{product.description}</p>
 
-                  <div className="flex items-center justify-between mb-6">
+                    <div className="flex items-center justify-between mb-6">
                     <div className="flex flex-col gap-2">
                       <span className="font-sans text-[0.65rem] uppercase tracking-[0.2em] text-foreground/60">Select Size:</span>
                       <div className="flex gap-2">
@@ -168,18 +183,27 @@ export function ProductGrid({
                     </div>
 
                     <div className="flex gap-2 self-end pb-1">
-                      {product.colors.map((c) => (
-                        <span
-                          key={c.name}
-                          className="w-4 h-4 rounded-none border border-foreground/10"
-                          style={{ backgroundColor: c.hex }}
-                          title={c.name}
-                        />
-                      ))}
+                      {product.colors.map((c) => {
+                        const isSelectedColor = getSelectedColor && getSelectedColor(product) === c.name;
+                        return (
+                          <button
+                            key={c.name}
+                            type="button"
+                            className={`w-5 h-5 rounded-none border transition-all ${isSelectedColor ? 'border-foreground shadow-[0_0_0_1px_rgba(0,0,0,1)]' : 'border-foreground/20 hover:border-foreground/60'}`}
+                            style={{ backgroundColor: c.hex }}
+                            title={c.name}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (handleSelectCardColor) handleSelectCardColor(product.id, c.name);
+                            }}
+                          />
+                        );
+                      })}
                     </div>
                   </div>
+                </div>
 
-                  <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 mt-auto">
                     <AvantGardeButton
                       className="w-full"
                       onClick={() => {
@@ -188,7 +212,7 @@ export function ProductGrid({
                           headers: { 'Content-Type': 'application/json' },
                           body: JSON.stringify({ name: product.title, price: product.price })
                         }).catch(console.error);
-                        handleAddToCart(product, getSelectedSize(product.id));
+                        handleAddToCart(product, getSelectedSize(product.id), getSelectedColor ? getSelectedColor(product) : product.colors[0]?.name);
                       }}
                     >
                       🛒 Add to Bag
@@ -208,7 +232,7 @@ export function ProductGrid({
                     </AvantGardeButton>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))
           )}
         </motion.div>

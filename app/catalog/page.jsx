@@ -1,35 +1,29 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { createClient } from '../utils/supabase/client';
-import { useCartStore } from '../src/store/cartStore';
+import { createClient } from '../../utils/supabase/client';
+import { useCartStore } from '../../src/store/cartStore';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
-import { PRODUCTS } from '../src/data/catalog';
-import { ShopTheLook } from '../src/components/ShopTheLook';
-import { QuickViewModal } from '../src/components/QuickViewModal';
-import { SizeGuideModal } from '../src/components/SizeGuideModal';
-import { CartDrawer } from '../src/components/CartDrawer';
-import { CheckoutModal } from '../src/components/CheckoutModal';
+import { PRODUCTS } from '../../src/data/catalog';
+import { QuickViewModal } from '../../src/components/QuickViewModal';
+import { SizeGuideModal } from '../../src/components/SizeGuideModal';
+import { CartDrawer } from '../../src/components/CartDrawer';
+import { CheckoutModal } from '../../src/components/CheckoutModal';
 
-import { Navbar } from '../src/components/Navbar';
-import { Hero } from '../src/components/Hero';
-import { ProductGrid } from '../src/components/ProductGrid';
-import { AvantGardeButton } from '../src/components/Button';
-import Link from 'next/link';
+import { Navbar } from '../../src/components/Navbar';
+import { ProductGrid } from '../../src/components/ProductGrid';
 
-
-function App() {
+function CatalogPage() {
   const supabase = createClient();
-  const [dbProducts, setDbProducts] = useState(PRODUCTS.slice(0, 4));
+  const [dbProducts, setDbProducts] = useState(PRODUCTS);
 
   useEffect(() => {
     async function fetchProducts() {
       const { data, error } = await supabase
         .from('products')
         .select('*')
-        .order('created_at', { ascending: false })
-        .limit(4);
+        .order('created_at', { ascending: false });
       
       if (error) {
         console.warn('Supabase fetch products error (ignoring if tables not created):', error.message);
@@ -48,7 +42,7 @@ function App() {
           sizes: ['S', 'M', 'L', 'XL', 'XXL'],
           colors: [{ name: 'Standard', hex: '#1a1a1a' }]
         }));
-        setDbProducts([...formattedProducts, ...PRODUCTS].slice(0, 4));
+        setDbProducts([...formattedProducts, ...PRODUCTS]);
       }
     }
     fetchProducts();
@@ -110,7 +104,7 @@ function App() {
     const size = getSelectedSize(product.id);
     const color = getSelectedColor(product);
     addToCart(product, size, color);
-    setIsCartOpen(true); // Open the drawer instead of local checkout modal
+    setIsCartOpen(true); 
   };
 
   // Filtered Products
@@ -132,16 +126,34 @@ function App() {
 
   return (
     <div className="app-container">
-
       <Navbar 
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
         setIsSizeGuideOpen={setIsSizeGuideOpen}
       />
 
-      <main className="w-full" id="home">
-        <Hero />
+      <main className="w-full pt-32" id="catalog-page">
         
+        {/* Catalog Header */}
+        <section className="max-w-[1400px] mx-auto px-6 mb-8 text-center">
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="font-serif text-4xl md:text-5xl font-medium tracking-tight mb-4"
+          >
+            The Full Catalog
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="font-sans text-sm text-foreground/70 max-w-xl mx-auto"
+          >
+            Explore our complete collection of essential and signature pieces, crafted for the modern individual.
+          </motion.p>
+        </section>
+
         <ProductGrid
           filteredProducts={filteredProducts}
           selectedCategory={selectedCategory}
@@ -162,17 +174,8 @@ function App() {
           handleAddToCart={handleAddToCart}
           handleBuyNow={handleBuyNow}
         />
-
-        <div className="flex justify-center mt-12 mb-24 px-6">
-          <Link href="/catalog" className="bg-[#1a1a1a] text-[#f8f8f8] font-bold font-['Syne'] uppercase tracking-widest px-8 py-4 hover:bg-neutral-800 transition-colors border border-transparent">
-            View Full Collection
-          </Link>
-        </div>
-
-        <ShopTheLook />
       </main>
 
-      
       <QuickViewModal
         quickViewProduct={quickViewProduct}
         setQuickViewProduct={setQuickViewProduct}
@@ -185,16 +188,13 @@ function App() {
         handleAddToCart={handleAddToCart}
       />
 
-      
       <SizeGuideModal
         isSizeGuideOpen={isSizeGuideOpen}
         setIsSizeGuideOpen={setIsSizeGuideOpen}
       />
 
-      
       <CartDrawer />
 
-      
       <CheckoutModal
         isCheckoutOpen={isCheckoutOpen}
         setIsCheckoutOpen={setIsCheckoutOpen}
@@ -211,4 +211,4 @@ function App() {
   );
 }
 
-export default App;
+export default CatalogPage;

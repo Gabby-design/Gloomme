@@ -1,6 +1,10 @@
+import Link from 'next/link';
 import { KlasikLogo } from './KlasikLogo';
+import { useCartStore } from '../store/cartStore';
 
-export function Navbar({ searchQuery, setSearchQuery, setIsSizeGuideOpen, setIsCartOpen, cart }) {
+export function Navbar({ searchQuery, setSearchQuery, setIsSizeGuideOpen }) {
+  const { cartItemCount, setIsCartOpen } = useCartStore();
+  
   return (
     <div className="fixed top-0 w-full z-50 flex flex-col">
       {/* Top Announcement Bar */}
@@ -11,9 +15,9 @@ export function Navbar({ searchQuery, setSearchQuery, setIsSizeGuideOpen, setIsC
       {/* Header & Navigation */}
       <header className="w-full bg-background/90 backdrop-blur-md border-b border-foreground/10 px-6 py-4">
         <div className="flex justify-between items-center max-w-7xl mx-auto">
-          <a href="#home" className="" aria-label="Klasik Wardrobe Home">
+          <Link href="/" className="" aria-label="Klasik Wardrobe Home">
             <KlasikLogo height={44} className="fill-foreground" />
-          </a>
+          </Link>
 
           {/* Search Box */}
           <div className="hidden md:flex items-center border border-foreground/20 px-3 py-1.5 focus-within:border-foreground transition-colors w-64">
@@ -29,12 +33,15 @@ export function Navbar({ searchQuery, setSearchQuery, setIsSizeGuideOpen, setIsC
 
           {/* Nav Actions */}
           <div className="flex items-center gap-6">
+            <Link href="/catalog" className="text-xs uppercase tracking-[0.15em] font-medium hover:opacity-70 transition-opacity">
+              Catalog
+            </Link>
             <button className="text-xs uppercase tracking-[0.15em] font-medium hover:opacity-70 transition-opacity" onClick={() => setIsSizeGuideOpen(true)}>
               Size Guide
             </button>
             <button className="flex items-center gap-2 text-xs uppercase tracking-[0.15em] font-medium hover:opacity-70 transition-opacity" onClick={() => setIsCartOpen(true)}>
               <span>BAG</span>
-              <span className="bg-foreground text-background text-[10px] px-1.5 py-0.5 rounded-full min-w-[20px] text-center">{cart.reduce((sum, item) => sum + item.quantity, 0)}</span>
+              <span className="bg-foreground text-background text-[10px] px-1.5 py-0.5 rounded-full min-w-[20px] text-center">{cartItemCount()}</span>
             </button>
           </div>
         </div>

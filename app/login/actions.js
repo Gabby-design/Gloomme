@@ -39,3 +39,10 @@ export async function signup(formData) {
   // Redirect back to login with a success verification message
   redirect('/login?message=Please check your email to verify your account.')
 }
+
+export async function logout() {
+  const supabase = await createClient()
+  await supabase.auth.signOut()
+  revalidatePath('/', 'layout')
+  redirect('/login')
+}

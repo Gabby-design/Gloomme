@@ -1,20 +1,34 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useCartStore } from '../store/cartStore';
+import { checkoutAction } from '../../app/actions/stripe';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 
-export function CartDrawer({
-  isCartOpen,
-  setIsCartOpen,
-  cart,
-  updateCartQty,
-  cartSubtotal,
-  formatPrice,
-  setIsCheckoutOpen,
-  setCheckoutStep
-}) {
-  if (!isCartOpen) return null;
+export function CartDrawer() {
+  const { cart, isCartOpen, setIsCartOpen, updateCartQty, cartSubtotal, cartItemCount } = useCartStore();
+  const [loading, setLoading] = useState(false);
+
+  const subtotal = cartSubtotal();
+  const formatPrice = (amount) => `₦${amount.toLocaleString()}`;
+
+  const handleCheckout = async () => {
+    setLoading(true);
+    try {
+      const result = await checkoutAction(cart);
+      if (result.url) {
+        window.location.href = result.url;
+      } else {
+        toast.error('Failed to initiate checkout.');
+      }
+    } catch (error) {
+      toast.error('Error starting checkout: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <>
-{/* Cart Drawer */}
-      {/* Cart Drawer */}
+    <AnimatePresence>
       {isCartOpen && (
         <div className="fixed inset-0 z-[100] flex justify-end bg-foreground/30 backdrop-blur-sm" onClick={() => setIsCartOpen(false)}>
           <motion.div
@@ -26,7 +40,7 @@ export function CartDrawer({
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center px-6 py-5 border-b border-foreground/10 bg-background z-10">
-              <h3 className="font-serif text-lg tracking-[-0.02em] font-semibold">YOUR SHOPPING BAG ({cart.reduce((sum, item) => sum + item.quantity, 0)})</h3>
+              <h3 className="font-serif text-lg tracking-[-0.02em] font-semibold">YOUR SHOPPING BAG ({cartItemCount()})</h3>
               <button
                 className="text-foreground hover:opacity-50 transition-opacity font-sans text-xl"
                 onClick={() => setIsCartOpen(false)}
@@ -80,15 +94,15 @@ export function CartDrawer({
                 <div className="mb-6">
                   <div className="flex justify-between font-sans text-[0.7rem] uppercase tracking-[0.1em] font-semibold mb-2">
                     <span>
-                      {cartSubtotal >= 70000
+                      {subtotal >= 70000
                         ? '🎉 You unlocked Free Express Delivery!'
-                        : `Add ${formatPrice(70000 - cartSubtotal)} more for Free Express Delivery`}
+                        : `Add ${formatPrice(70000 - subtotal)} more for Free Express Delivery`}
                     </span>
                   </div>
                   <div className="h-1 bg-foreground/10 w-full overflow-hidden">
                     <div
                       className="h-full bg-foreground transition-all duration-500"
-                      style={{ width: `${Math.min(100, (cartSubtotal / 70000) * 100)}%` }}
+                      style={{ width: `${Math.min(100, (subtotal / 70000) * 100)}%` }}
                     />
                   </div>
                 </div>
@@ -96,33 +110,30 @@ export function CartDrawer({
                 <div className="flex flex-col gap-2 mb-6 font-sans text-sm">
                   <div className="flex justify-between text-foreground/70">
                     <span>Subtotal</span>
-                    <span>{formatPrice(cartSubtotal)}</span>
+                    <span>{formatPrice(subtotal)}</span>
                   </div>
                   <div className="flex justify-between text-foreground/70">
                     <span>Estimated Shipping</span>
-                    <span>{cartSubtotal >= 70000 ? 'FREE' : '₦2,500'}</span>
+                    <span>{subtotal >= 70000 ? 'FREE' : '₦2,500'}</span>
                   </div>
                   <div className="flex justify-between font-bold text-base mt-2 pt-2 border-t border-foreground/10">
                     <span>Total Due</span>
-                    <span>{formatPrice(cartSubtotal + (cartSubtotal >= 70000 ? 0 : 2500))}</span>
+                    <span>{formatPrice(subtotal + (subtotal >= 70000 ? 0 : 2500))}</span>
                   </div>
                 </div>
 
                 <button
-                  className="w-full bg-foreground text-background font-sans text-xs uppercase tracking-[0.2em] py-4 border border-foreground hover:bg-transparent hover:text-foreground transition-all duration-[700ms]"
-                  onClick={() => {
-                    setIsCartOpen(false);
-                    setIsCheckoutOpen(true);
-                    setCheckoutStep('FORM');
-                  }}
+                  disabled={loading}
+                  className="w-full bg-[#1a1a1a] text-[#f8f8f8] font-sans text-xs uppercase tracking-[0.2em] py-4 hover:bg-neutral-800 transition-all duration-[700ms] disabled:opacity-50"
+                  onClick={handleCheckout}
                 >
-                  Proceed to Checkout
+                  {loading ? 'Processing...' : 'Checkout'}
                 </button>
               </div>
             )}
           </motion.div>
         </div>
       )}
-    </>
+    </AnimatePresence>
   );
 }
