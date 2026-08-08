@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { createClient } from '../utils/supabase/client';
 import { motion } from 'framer-motion';
 import toast from 'react-hot-toast';
 import { PRODUCTS } from '../src/data/catalog';
@@ -18,7 +19,30 @@ import { AvantGardeButton } from '../src/components/Button';
 
 
 function App() {
+  const supabase = createClient();
+  const [dbProducts, setDbProducts] = useState(PRODUCTS);
 
+  useEffect(() => {
+    async function fetchProducts() {
+      const { data, error } = await supabase.from('products').select('*').order('created_at', { ascending: false });
+      if (data && data.length > 0) {
+        const formattedProducts = data.map(p => ({
+          id: p.id,
+          title: p.name,
+          price: p.price,
+          description: p.description,
+          image: p.image_url || 'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=800&auto=format&fit=crop',
+          fallbackImage: p.image_url,
+          gallery: [p.image_url],
+          category: 'Essential',
+          sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+          colors: [{ name: 'Standard', hex: '#1a1a1a' }]
+        }));
+        setDbProducts([...formattedProducts, ...PRODUCTS]);
+      }
+    }
+    fetchProducts();
+  }, []);
 
   const [selectedPrice, setSelectedPrice] = useState('ALL');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
@@ -115,7 +139,7 @@ function App() {
   const cartSubtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   // Filtered Products
-  const filteredProducts = PRODUCTS.filter((p) => {
+  const filteredProducts = dbProducts.filter((p) => {
     const matchesPrice = selectedPrice === 'ALL' || p.price === Number(selectedPrice);
     const matchesCategory = selectedCategory === 'ALL' || p.category === selectedCategory;
     const matchesSearch =
