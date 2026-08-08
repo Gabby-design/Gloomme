@@ -1,42 +1,47 @@
 'use client'
 
-import { useState, Suspense, useTransition } from 'react'
+import { useState, Suspense, useEffect } from 'react'
+import { useFormState, useFormStatus } from 'react-dom'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { loginAction, signUpAction } from '../actions/auth'
+
+function SubmitButton({ isLogin }) {
+  const { pending } = useFormStatus()
+  return (
+    <button
+      type="submit"
+      disabled={pending}
+      className="mt-4 bg-[#1a1a1a] text-[#f8f8f8] font-bold font-['DM_Sans'] uppercase tracking-wider py-4 hover:bg-neutral-800 transition-colors border border-transparent disabled:opacity-50"
+    >
+      {pending ? 'Processing...' : (isLogin ? 'Log In' : 'Sign Up')}
+    </button>
+  )
+}
 
 function AuthForm() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const urlMessage = searchParams.get('message')
-  const [message, setMessage] = useState(urlMessage)
+  
   const [isLogin, setIsLogin] = useState(false)
-  const [isPending, startTransition] = useTransition()
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    setMessage(null)
-
-    const formData = new FormData(e.currentTarget)
+  // Wrapper for useFormState to handle both login and signup
+  const handleAuth = async (prevState, formData) => {
     const action = isLogin ? loginAction : signUpAction
-    
-    startTransition(async () => {
-      try {
-        const result = await action(formData)
-        
-        if (result?.error) {
-          setMessage(result.error)
-        } else if (result?.success) {
-          if (isLogin) {
-            router.push('/')
-          } else {
-            setMessage(result.success)
-          }
-        }
-      } catch (err) {
-        setMessage('An unexpected error occurred.')
-      }
-    })
+    const result = await action(formData)
+    return result
   }
+
+  const [state, formAction] = useFormState(handleAuth, { error: null, success: null })
+
+  // Handle successful login redirect outside of the server action
+  useEffect(() => {
+    if (state?.success && isLogin) {
+      router.push('/')
+    }
+  }, [state, isLogin, router])
+
+  const displayMessage = state?.error || state?.success || urlMessage
 
   return (
     <div className="w-full max-w-md bg-white p-8 border border-neutral-200">
@@ -44,13 +49,13 @@ function AuthForm() {
         {isLogin ? 'LOG IN' : 'CREATE ACCOUNT'}
       </h1>
       
-      {message && (
-        <div className={`p-4 mb-6 text-sm font-['DM_Sans'] text-center border ${message.includes('verify') ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800'}`}>
-          {message}
+      {displayMessage && (
+        <div className={`p-4 mb-6 text-sm font-['DM_Sans'] text-center border ${(displayMessage.includes('verify') || state?.success) ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800'}`}>
+          {displayMessage}
         </div>
       )}
 
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+      <form className="flex flex-col gap-4" action={formAction}>
         <div className="flex flex-col gap-2">
           <label className="text-sm font-semibold text-[#1a1a1a] font-['DM_Sans']">
             Email
@@ -74,19 +79,12 @@ function AuthForm() {
             required
             className="px-4 py-3 border border-neutral-300 focus:outline-none focus:border-[#1a1a1a] transition-colors bg-[#f8f8f8] text-[#1a1a1a] font-['DM_Sans']"
           />
-        </div>
-        
-        <button
-          type="submit"
-          disabled={isPending}
-          className="mt-4 bg-[#1a1a1a] text-[#f8f8f8] font-bold font-['DM_Sans'] uppercase tracking-wider py-4 hover:bg-neutral-800 transition-colors border border-transparent disabled:opacity-50"
-        >
-          {isPending ? 'Processing...' : (isLogin ? 'Log In' : 'Sign Up')}
-        </button>
+        <SubmitButton isLogin={isLogin} />
       </form>
 
       <div className="mt-6 text-center">
         <button 
+          type="button"
           onClick={() => setIsLogin(!isLogin)}
           className="text-sm text-neutral-500 hover:text-[#1a1a1a] font-['DM_Sans'] transition-colors"
         >
