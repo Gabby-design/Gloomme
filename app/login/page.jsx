@@ -79,6 +79,7 @@ function AuthForm() {
             required
             className="px-4 py-3 border border-neutral-300 focus:outline-none focus:border-[#1a1a1a] transition-colors bg-[#f8f8f8] text-[#1a1a1a] font-['DM_Sans']"
           />
+        </div>
         <SubmitButton isLogin={isLogin} />
       </form>
 
