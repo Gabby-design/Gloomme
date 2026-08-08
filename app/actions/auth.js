@@ -34,7 +34,13 @@ export async function signUpAction(formData) {
       password: formData.get('password'),
     }
 
-    const { error } = await supabase.auth.signUp(data)
+    const { error } = await supabase.auth.signUp({
+      email: data.email,
+      password: data.password,
+      options: {
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/auth/callback`,
+      },
+    })
 
     if (error) {
       return { error: error.message }
